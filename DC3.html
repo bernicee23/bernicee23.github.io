@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website with Navigation Bar</title>
+    <style>
+        /* General Styles */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #fff;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #fff;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 0 20px;
+            height: 70px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        /* Logo */
+        .logo img {
+            height: 40px;
+        }
+
+        /* Navigation Links */
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #000;
+            font-size: 16px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #666;
+        }
+
+        /* Protruding Header */
+        .protruding-header {
+            background-color: #800080;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 0 0 10px 10px;
+            position: relative;
+            top: -5px;
+        }
+
+        .protruding-header a {
+            text-decoration: none;
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            display: block;
+        }
+
+        .protruding-header a:hover {
+            color: #ddd;
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <!-- Logo -->
+        <div class="logo">
+            <img src="logo.png" alt="Logo">
+        </div>
+        
+        <!-- Navigation Links -->
+        <nav class="nav-links">
+            <a href="#about">About</a>
+            <a href="#programmes">Programmes</a>
+            <a href="#regulations">Regulations</a>
+            <a href="#proposal-submission">Proposal Submission</a>
+            <a href="#activities">Activities</a>
+            <a href="#resources">Resources</a>
+        </nav>
+        
+        <!-- Protruding Header -->
+        <div class="protruding-header">
+            <a href="#learn">Learn<br>Gen AI</a>
+        </div>
+    </header>
+</body>
+</html>
