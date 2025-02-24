@@ -93,7 +93,7 @@
         }
 
         .button.visible {
-            opacity: 1:
+            opacity: 1;
             visibility: visible;
   }
 
@@ -435,7 +435,7 @@ text-align: center;
         <p>This is the land of AI.</p>
         <p>Before you join us in the Tower of Knowledge, you must pass the guard's Test.</p>
         <p>Go through the door when you're ready.</p>
-        <button id="startBtn" class="button" style="display: none;">Let's Go</button>
+        <button id="startBtn" class="button">Let's Go</button>
     </div>
   
     <img src="https://bernicee23.github.io/Home.jpeg" class="main-image" alt="Background Image" usemap="#image-map">
@@ -555,8 +555,10 @@ $("#welcomeMessage")
         });
 
         setTimeout(() => {
-            button.css({ opacity: 0, display: "block" })
-              .animate({ opacity: 1 }, 1000);
+            button.css({ opacity: 0 })
+              .show ()
+              .animate({ opacity: 1 }, 1000)
+              .addClass('visible');
         }, delay * lines.length);
     });
 
