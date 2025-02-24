@@ -419,8 +419,8 @@ text-align: center;
     <div class="crystal" id="crystal2">Crystal 2</div>
 
     <map name="image-map">
-        <area shape="rect" coords="789,137,1218,660" alt="Hotspot 1" id="hotspot">
-        <area shape="rect" coords="698,4,878,4823" alt="Hotspot 2" id="hotspot2">
+        <area shape="rect" coords="789,137,1218,660" alt="Hotspot 1" id="hotspot" href="javascript:void(0);">
+        <area shape="rect" coords="698,4,878,4823" alt="Hotspot 2" id="hotspot2" href="javascript:void(0);">
     </map>
     
 
@@ -518,6 +518,13 @@ text-align: center;
         // Adjust the map on load and resize
         adjustMap();
         $(window).on('resize', adjustMap);
+
+      $('#hotspot, #hotspot2').on('click', function(event) {
+7        event.preventDefault(); // Stop the browser from navigating
+8        // Your code to change the image goes here
+9        // Example:
+10        $('.main-image').attr('src', 'new-image.jpg');
+11    });
     });
           
     document.addEventListener("DOMContentLoaded", function() {
