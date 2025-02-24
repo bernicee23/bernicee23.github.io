@@ -64,6 +64,7 @@
   opacity: 0;
   transition: opacity 1s;
   color: white;
+  z-index: 9999;
   }
 
         @keyframes fadeIn {
@@ -537,8 +538,8 @@ $(document).ready(function() {
     const delay = 1000;
 
     lines.each((index, line) => {
-        setTimeout(() => $(line).css("opacity", "1"), delay * index);
-    });
+        setTimeout(() => $(line).css("animation", "fadeIn 3s forwards");
+    }, 100);
 
     setTimeout(() => button.show(), delay * lines.length);
 
