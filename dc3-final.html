@@ -407,11 +407,6 @@ text-align: center;
     transform: scale(1.05);
 }
 
-  #hotspot2 {
-    opacity: 0;
-    transition: opacity 1s ease;
-  }
-
 
     </style>
 </head>
@@ -434,7 +429,7 @@ text-align: center;
 
     <map name="image-map">
         <area shape="rect" coords="789,137,1218,660" alt="Hotspot 1" id="hotspot" href="javascript:void(0);">
-        <area shape="rect" coords="698,4,878,482" alt="Hotspot 2" id="hotspot2" href="javascript:void(0);">
+        <area shape="rect" coords="698,4,878,4823" alt="Hotspot 2" id="hotspot2" href="javascript:void(0);">
     </map>
     
 
@@ -495,17 +490,9 @@ text-align: center;
     </div>
   
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <!-- ... (keep head section exactly as is) ... -->
-</head>
-<body>
-    <!-- ... (keep body content exactly as is) ... -->
-
 <script>
 $(document).ready(function() {
-    // ========== Image Map Scaling ==========
+    // ========== Image Map Scaling Fix ==========
     const originalWidth = 1472;
     const originalHeight = 832;
     
@@ -514,6 +501,7 @@ $(document).ready(function() {
         const currentWidth = img.width();
         const currentHeight = img.height();
         
+        // Only adjust if image has valid dimensions
         if (currentWidth > 0 && currentHeight > 0) {
             const scaleX = currentWidth / originalWidth;
             const scaleY = currentHeight / originalHeight;
@@ -532,15 +520,13 @@ $(document).ready(function() {
     $('.main-image').on('load', function() {
         adjustMap();
         $(window).on('resize', adjustMap);
-    }).trigger('load');
-
-    // ========== Element Visibility Initialization ==========
-    $('.crystal, #hotspot2').css('opacity', 0).hide();
+    }).trigger('load'); // Force trigger if already loaded
 
     // ========== Hotspot Fixes ==========
-    $('area').attr('href', 'javascript:void(0);');
-
-    // ========== Welcome Sequence ==========
+    $('area').attr('href', 'javascript:void(0);'); // Ensure clickable behavior
+    
+    // ========== Rest of Your Script ==========
+    // Welcome Sequence
     const lines = $(".welcome-box p");
     const button = $("#startBtn");
     const delay = 1000;
@@ -557,20 +543,13 @@ $(document).ready(function() {
         });
     });
 
-    // ========== Crystal Interactions ==========
+    // Crystal Interactions
     const crystalConfig = {
-        "grey-crystal": { 
-            target: "#grey-box",
-            collectedKey: "grey"
-        },
-        "pink-crystal": { 
-            target: "#pink-box",
-            collectedKey: "pink"
-        },
+        "grey-crystal": { target: "#grey-box" },
+        "pink-crystal": { target: "#pink-box" },
         "red-crystal": {
             target: "#red-box",
-            collectedKey: "red",
-            content: "<div class='crystal-text'>Disadvantages of AI...",
+            content: "<div class='crystal-text'>Disadvantages of AI<br>AI may produce inaccurate or misleading info while sounding highly convincing.<br>AI generated content may include copyrighted or deepfake content, leading to legal and ethical concerns</div>",
             style: {
                 backgroundColor: "rgba(255, 0, 0, 0.8)",
                 boxShadow: "0 0 10px rgba(255, 0, 0, 0.8)"
@@ -578,8 +557,7 @@ $(document).ready(function() {
         },
         "blue-crystal": {
             target: "#blue-box",
-            collectedKey: "blue",
-            content: "<div class='crystal-text'>When using Gen AI...",
+            content: "<div class='crystal-text'>When using Gen AI, <br>Always flag or tag AI-generated content to prevent misinformation <br>Verify sources when using info produced by gen ai</div>",
             style: {
                 backgroundColor: "rgba(0, 0, 255, 0.8)",
                 boxShadow: "0 0 10px rgba(0, 0, 255, 0.8)"
@@ -593,12 +571,10 @@ $(document).ready(function() {
             if (config.content) target.html(config.content);
             if (config.style) target.css(config.style);
             target.css("opacity", "1");
-            crystalsCollected[config.collectedKey] = true;
-            console.log('Collected crystals:', crystalsCollected);
         });
     });
 
-    // ========== Hotspot Interactions ==========
+    // Hotspot Interactions
     let newBox = null;
     const crystalsCollected = {
         grey: false,
@@ -609,22 +585,16 @@ $(document).ready(function() {
 
     $("#hotspot").on("click", function(e) {
         e.preventDefault();
+        console.log('Hotspot 1 clicked');
         $("#homeImage").addClass("fade-out");
         
         setTimeout(() => {
             $(".main-image")
                 .attr("src", "Path.jpeg")
                 .on("load", function() {
-                    adjustMap();
-                    // Show crystals and hotspot2 with proper animation
-                    $(".crystal").css({
-                        'display': 'block',
-                        'opacity': 0
-                    }).animate({opacity: 1}, 1000);
-                    $("#hotspot2").css({
-                        'display': 'block',
-                        'opacity': 0
-                    }).animate({opacity: 1}, 1000);
+                    adjustMap(); // Re-adjust map for new image
+                    $(".crystal").addClass("crystal-visible");
+                    $("#hotspot2").show();
 
                     if (!newBox) {
                         newBox = $(`<div id="new-box">
@@ -656,7 +626,7 @@ $(document).ready(function() {
 
     $("#hotspot2").on("click", function(e) {
         e.preventDefault();
-        console.log('Crystals collected status:', crystalsCollected);
+        console.log('Hotspot 2 clicked');
         if (Object.values(crystalsCollected).every(v => v)) {
             $(".crystal, #new-box").animate({ opacity: 0 }, 1000, function() {
                 $(this).remove();
@@ -666,18 +636,18 @@ $(document).ready(function() {
                 $(".main-image")
                     .attr("src", "Guard.jpeg")
                     .on("load", function() {
-                        adjustMap();
+                        adjustMap(); // Re-adjust map for new image
                         $(".app")
-                            .fadeTo(1000, 1)
                             .show()
                             .addClass("visible");
-                    });
+                    })
+                    .on("error", () => console.error("Failed to load Guard.jpeg"));
             }, 1100);
         } else {
-            alert("Learn from all four Crystals before proceeding.");
+            alert("Learn from the Crystals before proceeding.");
         }
     });
-  
+
     // Quiz System
     const questions = [ /* Your questions array */ ];
     const quizElements = {
