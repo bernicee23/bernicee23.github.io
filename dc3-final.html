@@ -84,8 +84,7 @@
     margin-top: 15px; /* Added more space from the text above */
     display: inline-block;
     opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.5s ease, visibility 0.5s;
+    transition: opacity 0.5s ease;
 }
         .button:hover {
             box-shadow: 0 0 10px rgba(11, 128, 167, 0.9);
@@ -94,7 +93,6 @@
 
         .button.visible {
             opacity: 1;
-            visibility: visible;
   }
 
         .crystal {
@@ -557,8 +555,9 @@ $("#welcomeMessage")
         setTimeout(() => {
             button.css({ opacity: 0 })
               .show ()
-              .animate({ opacity: 1 }, 1000)
-              .addClass('visible');
+              .animate({ opacity: 1 }, 1000, function() {
+                $(this).addClass('visible')
+                {);
         }, delay * lines.length);
     });
 
