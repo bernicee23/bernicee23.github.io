@@ -20,6 +20,13 @@
   overflow: hidden;
   }
 
+  .main-image {
+  width: 100%;
+  height: auto;
+  position: relative;
+    z-index: 1000
+  }
+
   .welcome-box {
   position: absolute;
   top: 50%;
@@ -30,23 +37,17 @@
   border-radius: 10px;
   text-align: center;
   box-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
+  opacity: 0;
+  animation: fadeIn 3s forwards;
   width: 80%;
   max-width: 500px;
   height: 250px;
   display: flex;
   flex-direction: column;
   justify-content: stretch; /* Ensure button has space */
-  z-index: 9999 !important;
-    opacity: 0;
+  z-index: 2000;
   }
 
-  .main-image {
-  width: 100%;
-  height: auto;
-  position: relative;
-    z-index: 1;
-  }
-  
   #homeImage {
   transition: opacity 1s ease;
   opacity: 1;
@@ -61,7 +62,7 @@
   font-weight: 400; /* Less bold */
   margin: 10px 0px;
   opacity: 0;
-  transition: opacity 1s ease-in-out;
+  transition: opacity 1s;
   color: white;
   }
 
@@ -83,26 +84,16 @@
     transition: all 0.3s ease;
     z-index: 1000;
     margin-top: 15px; /* Added more space from the text above */
-    display: none;
-    opacity: 0;
-    transition: opacity 0.5s ease;
 }
         .button:hover {
             box-shadow: 0 0 10px rgba(11, 128, 167, 0.9);
             transform: scale(1.02);
         }
 
-        .button.visible {
-            display: inline-block;
-            opacity: 1;
-  }
-
         .crystal {
             position: absolute;
             opacity: 0;
             transition: opacity 0.5s ease;
-            z-index: 1000;
-            cursor: pointer;
         }
 
         .crystal-visible {
@@ -292,7 +283,6 @@ left: 50%;
 transform: translate(-50%, -50%);
 z-index: 4000;
 display: none;
-  z-index: 10000;
         }
 
 .app h1{
@@ -354,10 +344,9 @@ text-align: center;
     margin: 10px auto;
     border-radius: 4px;
     cursor: pointer;
-    display: block !important;
+    display: none;
     transition: all 0.3s;
     font-size: 17px;
-    opacity: 1 !important;
 }
 
 #next-btn:hover, #enter-tower-btn:hover {
@@ -419,9 +408,8 @@ text-align: center;
 }
 
   #hotspot2 {
+    opacity: 0;
     transition: opacity 1s ease;
-    z-index: 2000;
-    cursor: pointer;
   }
 
 
@@ -430,12 +418,13 @@ text-align: center;
 <body>
     <audio id="background-audio" src="futuristic-sci-fi-cinematic-112293.mp3" autoplay loop></audio>
 
-  <div class="welcome-box" id="welcomeMessage">
+
+    <div class="welcome-box" id="welcomeMessage">
         <p>Welcome, traveller.</p>
         <p>This is the land of AI.</p>
         <p>Before you join us in the Tower of Knowledge, you must pass the guard's Test.</p>
         <p>Go through the door when you're ready.</p>
-        <button id="startBtn" class="button">Let's Go</button>
+        <button id="startBtn" class="button" style="display: none;">Let's Go</button>
     </div>
   
     <img src="https://bernicee23.github.io/Home.jpeg" class="main-image" alt="Background Image" usemap="#image-map">
@@ -444,7 +433,7 @@ text-align: center;
     <div class="crystal" id="crystal2">Crystal 2</div>
 
     <map name="image-map">
-        <area shape="rect" coords="500,137,1218,660" alt="Hotspot 1" id="hotspot" href="javascript:void(0);">
+        <area shape="rect" coords="789,137,1218,660" alt="Hotspot 1" id="hotspot" href="javascript:void(0);">
         <area shape="rect" coords="698,4,878,482" alt="Hotspot 2" id="hotspot2" href="javascript:void(0);">
     </map>
     
@@ -499,10 +488,14 @@ text-align: center;
       </div>
   </div>
 
+  <div class="congrats-box" id="congratsMessage">
+       <p>Congratulations on passing the test and</p>
+        <p>reaching the Tower of Knowledge.</p>
+        <p>You are now well-equipped to be a user of Gen AI.</p>
+    </div>
 
 <script>
 $(document).ready(function() {
-  try {
     // ========== Image Map Scaling ==========
     const originalWidth = 1472;
     const originalHeight = 832;
@@ -533,43 +526,29 @@ $(document).ready(function() {
     }).trigger('load');
 
     // ========== Element Visibility Initialization ==========
-    $('.crystal').css('opacity', 0);
-    $('#hotspot2').hide();
+    $('.crystal, #hotspot2').css('opacity', 0).hide();
 
     // ========== Hotspot Fixes ==========
     $('area').attr('href', 'javascript:void(0);');
 
     // ========== Welcome Sequence ==========
-// Change the welcome sequence to
-$("#welcomeMessage")
-    .css({ opacity: 0, display: "flex" })
-    .animate({ opacity: 1 }, 1000, function() {
-        const lines = $(".welcome-box p");
-        const button = $("#startBtn");
-        const delay = 1000;
+    const lines = $(".welcome-box p");
+    const button = $("#startBtn");
+    const delay = 1000;
 
-        lines.each(function(index) {
-            setTimeout(() => {
-                $(this).animate({ opacity: 1 }, 1000);
-            }, delay * index);
+    lines.each((index, line) => {
+        setTimeout(() => $(line).css("opacity", "1"), delay * index);
+    });
+
+    setTimeout(() => button.show(), delay * lines.length);
+
+    button.on("click", function() {
+        $("#welcomeMessage").animate({ opacity: 0 }, 1000, () => {
+            $("#welcomeMessage").hide();
         });
-
-        setTimeout(() => {
-            button.css({ opacity: 0, display: 'block' })
-              .animate({ opacity: 1 }, 1000, function() {
-                $(this).addClass('visible')
-                {);
-        }, delay * lines.length);
     });
 
     // ========== Crystal Interactions ==========
-
-const crystalsCollected = {
-    grey: false,
-    pink: false,
-    red: false,
-    blue: false
-};
     const crystalConfig = {
         "grey-crystal": { 
             target: "#grey-box",
@@ -599,24 +578,25 @@ const crystalsCollected = {
         }
     };
 
- 
-
-// Update crystal click handler
-Object.entries(crystalConfig).forEach(([id, config]) => {
-    $(`#${id}`).on("click", function() {
-        const target = $(config.target);
-        if (config.content) target.html(config.content);
-        if (config.style) target.css(config.style);
-        target.stop(true).css("opacity", "1");
-        crystalsCollected[config.collectedKey] = true;
-        console.log('Collected crystals:', crystalsCollected);
-        
-        setTimeout(() => target.animate({ opacity: 0 }, 1000), 3000);
+    Object.entries(crystalConfig).forEach(([id, config]) => {
+        $(`#${id}`).on("click", function() {
+            const target = $(config.target);
+            if (config.content) target.html(config.content);
+            if (config.style) target.css(config.style);
+            target.css("opacity", "1");
+            crystalsCollected[config.collectedKey] = true;
+            console.log('Collected crystals:', crystalsCollected);
+        });
     });
-});
 
     // ========== Hotspot Interactions ==========
     let newBox = null;
+    const crystalsCollected = {
+        grey: false,
+        pink: false,
+        red: false,
+        blue: false
+    };
 
     $("#hotspot").on("click", function(e) {
         e.preventDefault();
@@ -628,14 +608,14 @@ Object.entries(crystalConfig).forEach(([id, config]) => {
                 .on("load", function() {
                     adjustMap();
                     // Show crystals and hotspot2 with proper animation
-                    $(".crystal")
-                      .css({ display: 'block', opacity: 0 })
-                      .delay(500)
-                      .animate({opacity: 1}, 1000);
-                    $("#hotspot2")
-                      .show()
-                      .css('opacity', 0)
-                      .animate({opacity: 1}, 1000);
+                    $(".crystal").css({
+                        'display': 'block',
+                        'opacity': 0
+                    }).animate({opacity: 1}, 1000);
+                    $("#hotspot2").css({
+                        'display': 'block',
+                        'opacity': 0
+                    }).animate({opacity: 1}, 1000);
 
                     if (!newBox) {
                         newBox = $(`<div id="new-box">
@@ -668,12 +648,11 @@ Object.entries(crystalConfig).forEach(([id, config]) => {
     $("#hotspot2").on("click", function(e) {
         e.preventDefault();
         console.log('Crystals collected status:', crystalsCollected);
+        if (Object.values(crystalsCollected).every(v => v)) {
+            $(".crystal, #new-box").animate({ opacity: 0 }, 1000, function() {
+                $(this).remove();
+            });
 
-        const allCollected = Object.values(crystalsCollected).every(v => v === true);
-
-        if (allCollected) {
-            $(".crystal, #new-box").animate({ opacity: 0 }, 1000);
-            
             setTimeout(() => {
                 $(".main-image")
                     .attr("src", "Guard.jpeg")
@@ -683,7 +662,6 @@ Object.entries(crystalConfig).forEach(([id, config]) => {
                             .fadeTo(1000, 1)
                             .show()
                             .addClass("visible");
-                            $(".crystal").hide();
                     });
             }, 1100);
         } else {
@@ -836,15 +814,7 @@ Object.entries(crystalConfig).forEach(([id, config]) => {
 
     // Initialize quiz
     startQuiz();
-
- } catch (error) {
-                  console.error("Initialization error:", error);
-                  $("#welcomeMessage").show().css({ opacity: 1 });
-                  $("#startBtn").show().css({ opacity: 1 });
-}
 });
-
-
 </script>
     </body>
 </html>
