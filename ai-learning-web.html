@@ -463,35 +463,23 @@ text-align: center;
     transform: scale(1.05);
 }
 
-  img.main-image {
-  position: relative; /* Make z-index work */
-  z-index: 40000;         /* Ensure it's above other elements */
-  width: 100%;
-  height: auto;
-}
 
-  .image-container{
-    width: auto;
-    height: 100%;
-  }
 
     </style>
 </head>
 <body>
     <audio id="background-audio" src="futuristic-sci-fi-cinematic-112293.mp3" autoplay loop></audio>
 
-  <div class="image-container">
     <img src="Home.jpeg" class="main-image" alt="Background Image" usemap="#image-map">
     <img id="homeImage" src="Home.jpeg" alt="Home Image">
+    <div class="crystal" id="crystal1">Crystal 1</div>
+    <div class="crystal" id="crystal2">Crystal 2</div>
 
     <map name="image-map">
         <area shape="rect" coords="789,137,1218,660" alt="Hotspot 1" id="hotspot">
         <area shape="rect" coords="698,4,878,4823" alt="Hotspot 2" id="hotspot2">
     </map>
-  </div>
-    <div class="crystal" id="crystal1">Crystal 1</div>
-    <div class="crystal" id="crystal2">Crystal 2</div>
-    
+  
 
     <div class="welcome-box" id="welcomeMessage">
         <p>Welcome, traveller.</p>
