@@ -43,7 +43,7 @@
   width: 100%;
   height: auto;
   position: relative;
-    z-index: 1000
+    z-index: 1;
   }
   
   #homeImage {
@@ -284,6 +284,7 @@ left: 50%;
 transform: translate(-50%, -50%);
 z-index: 4000;
 display: none;
+  z-index: 10000;
         }
 
 .app h1{
@@ -345,9 +346,10 @@ text-align: center;
     margin: 10px auto;
     border-radius: 4px;
     cursor: pointer;
-    display: none;
+    display: block !important;
     transition: all 0.3s;
     font-size: 17px;
+    opacity: 1 !important;
 }
 
 #next-btn:hover, #enter-tower-btn:hover {
@@ -409,9 +411,9 @@ text-align: center;
 }
 
   #hotspot2 {
-    opacity: 0;
     transition: opacity 1s ease;
     z-index: 2000;
+    cursor: pointer;
   }
 
 
@@ -434,7 +436,7 @@ text-align: center;
     <div class="crystal" id="crystal2">Crystal 2</div>
 
     <map name="image-map">
-        <area shape="rect" coords="789,137,1218,660" alt="Hotspot 1" id="hotspot" href="javascript:void(0);">
+        <area shape="rect" coords="500,137,1218,660" alt="Hotspot 1" id="hotspot" href="javascript:void(0);">
         <area shape="rect" coords="698,4,878,482" alt="Hotspot 2" id="hotspot2" href="javascript:void(0);">
     </map>
     
@@ -529,6 +531,7 @@ $(document).ready(function() {
     $('area').attr('href', 'javascript:void(0);');
 
     // ========== Welcome Sequence ==========
+// Change the welcome sequence to
 $("#welcomeMessage")
     .css({ opacity: 0, display: "flex" })
     .animate({ opacity: 1 }, 1000, function() {
@@ -536,15 +539,14 @@ $("#welcomeMessage")
         const button = $("#startBtn");
         const delay = 1000;
 
-        lines.each((index, line) => {
+        lines.each(function(index) {
             setTimeout(() => {
-                $(line).animate({ opacity: 1 }, 1000);
+                $(lines[index]).animate({ opacity: 1 }, 1000);
             }, delay * index);
         });
 
         setTimeout(() => {
-            button.css({ opacity: 0, display: "block" })
-                  .animate({ opacity: 1 }, 1000);
+            button.show().css({ opacity: 0 }).animate({ opacity: 1 }, 1000);
         }, delay * lines.length);
     });
 
@@ -578,18 +580,27 @@ $("#welcomeMessage")
         }
     };
 
-    Object.entries(crystalConfig).forEach(([id, config]) => {
-        $(`#${id}`).on("click", function() {
-            const target = $(config.target);
-            if (config.content) target.html(config.content);
-            if (config.style) target.css(config.style);
-            target.css("opacity", "1");
-            crystalsCollected[config.collectedKey] = true;
-            console.log('Collected crystals:', crystalsCollected);
+  // Add this after crystalConfig declaration
+const crystalsCollected = {
+    grey: false,
+    pink: false,
+    red: false,
+    blue: false
+};
 
-          setTimeout(() => target.css("opacity", "0"), 3000);
-        });
+// Update crystal click handler
+Object.entries(crystalConfig).forEach(([id, config]) => {
+    $(`#${id}`).on("click", function() {
+        const target = $(config.target);
+        if (config.content) target.html(config.content);
+        if (config.style) target.css(config.style);
+        target.stop(true).css("opacity", "1");
+        crystalsCollected[config.collectedKey] = true;
+        console.log('Collected crystals:', crystalsCollected);
+        
+        setTimeout(() => target.animate({ opacity: 0 }, 1000), 3000);
     });
+});
 
     // ========== Hotspot Interactions ==========
     let newBox = null;
@@ -611,7 +622,7 @@ $("#welcomeMessage")
                     adjustMap();
                     // Show crystals and hotspot2 with proper animation
                     $(".crystal")
-                      .css('display', 'block', opacity: 0})
+                      .css({ display: 'block', opacity: 0 })
                       .delay(500)
                       .animate({opacity: 1}, 1000);
                     $("#hotspot2")
