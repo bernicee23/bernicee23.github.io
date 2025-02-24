@@ -485,8 +485,8 @@ text-align: center;
         </div>
     </header>
 
-    <img src="DC3/Home.jpeg" class="main-image" alt="Background Image" usemap="#image-map">
-    <img id="homeImage" src="DC3/Home.jpeg" alt="Home Image">
+    <img src="Home.jpeg" class="main-image" alt="Background Image" usemap="#image-map">
+    <img id="homeImage" src="Home.jpeg" alt="Home Image">
     <div class="crystal" id="crystal1">Crystal 1</div>
     <div class="crystal" id="crystal2">Crystal 2</div>
 
@@ -505,14 +505,14 @@ text-align: center;
     </div>
 
     <div class="crystal" id="grey-crystal">
-        <img src="DC3/Grey Crystal.png" alt="Grey Crystal">
+        <img src="Grey Crystal.png" alt="Grey Crystal">
         <div class="crystal-box" id="grey-box">
             <div class="crystal-text">What is AI? It is a type of technology that can produce various types of content, including text, imagery, audio, and synthetic data.</div>
         </div>
     </div>
 
     <div class="crystal" id="pink-crystal">
-        <img src="DC3/Pink Crystal.png" alt="Pink Crystal">
+        <img src="Pink Crystal.png" alt="Pink Crystal">
         <div class="crystal-box" id="pink-box">
             <div class="crystal-text">Advantages of AI<br>AI can help enhance your creativity, improve on your ideas, and increase productivity!<br>AI can help you increase efficiency by automating repetitive tasks like drafting emails, summarising documents, and generating reports.</div>
         </div>
@@ -527,14 +527,14 @@ text-align: center;
     </div>
     
     <div class="crystal" id="red-crystal">
-        <img src="DC3/Red Crystal.png" alt="Red Crystal">
+        <img src="Red Crystal.png" alt="Red Crystal">
         <div class="crystal-box" id="red-box">
             <div class="crystal-text">What are the disadvantages of AI?<br>Misinformation - AI may produce inaccurate or misleading information while sounding highly convincing.<br>Deepfake & Ethical concerns - May include copyrighted content, leading to legal and ethical concerns.</div>
         </div>
     </div>
     
     <div class="crystal" id="blue-crystal">
-        <img src="DC3/Blue Crystal.png" alt="Blue Crystal">
+        <img src="Blue Crystal.png" alt="Blue Crystal">
         <div class="crystal-box" id="blue-box">
             <div class="crystal-text">Things to Note when using Gen AI<br>When Posting - Always flag or tag your content as AI-generated to prevent misinformation!<br>Verify - Check sources when using information produced by any Gen AI.</div>
         </div>
@@ -625,7 +625,7 @@ text-align: center;
         homeImage.classList.add("fade-out");
         setTimeout(() => {
             let mainImage = document.querySelector(".main-image");
-            mainImage.src = "DC3/Path.jpeg";
+            mainImage.src = "Path.jpeg";
             mainImage.onload = function() {
                 document.querySelectorAll(".crystal").forEach(crystal => {
                     crystal.classList.add("crystal-visible");
@@ -675,7 +675,7 @@ text-align: center;
             setTimeout(() => {
                 newBox.remove();
                 let mainImage = document.querySelector(".main-image");
-                mainImage.src = "DC3/Guard.jpeg";
+                mainImage.src = "Guard.jpeg";
                 
                 // Add load event listener for the new image
                 mainImage.onload = function() {
@@ -882,7 +882,7 @@ function showScore(){
             document.querySelector('.app').style.opacity = 0;
             setTimeout(() => {
                 document.querySelector('.app').style.display = 'none';
-                document.querySelector('.main-image').src = "DC3/Inside.png";
+                document.querySelector('.main-image').src = "Inside.png";
             }, 1000);
         });
         
