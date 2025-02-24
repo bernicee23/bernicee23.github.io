@@ -490,9 +490,9 @@ text-align: center;
     </div>
   
 
-         <script>
+<script>
 $(document).ready(function() {
-    // ========== Image Map Scaling ==========
+    // ========== Image Map Scaling Fix ==========
     const originalWidth = 1472;
     const originalHeight = 832;
     
@@ -500,22 +500,33 @@ $(document).ready(function() {
         const img = $('.main-image');
         const currentWidth = img.width();
         const currentHeight = img.height();
-        const scaleX = currentWidth / originalWidth;
-        const scaleY = currentHeight / originalHeight;
+        
+        // Only adjust if image has valid dimensions
+        if (currentWidth > 0 && currentHeight > 0) {
+            const scaleX = currentWidth / originalWidth;
+            const scaleY = currentHeight / originalHeight;
 
-        $('area').each(function() {
-            const coords = $(this).attr('coords').split(',').map(Number);
-            const newCoords = coords.map((coord, index) => 
-                Math.round(coord * (index % 2 === 0 ? scaleX : scaleY))
-            );
-            $(this).attr('coords', newCoords.join(','));
-        });
+            $('area').each(function() {
+                const coords = $(this).attr('coords').split(',').map(Number);
+                const newCoords = coords.map((coord, index) => 
+                    Math.round(coord * (index % 2 === 0 ? scaleX : scaleY))
+                );
+                $(this).attr('coords', newCoords.join(','));
+            });
+        }
     }
 
-    adjustMap();
-    $(window).on('resize', adjustMap);
+    // Initialize with image load event
+    $('.main-image').on('load', function() {
+        adjustMap();
+        $(window).on('resize', adjustMap);
+    }).trigger('load'); // Force trigger if already loaded
 
-    // ========== Welcome Sequence ==========
+    // ========== Hotspot Fixes ==========
+    $('area').attr('href', 'javascript:void(0);'); // Ensure clickable behavior
+    
+    // ========== Rest of Your Script ==========
+    // Welcome Sequence
     const lines = $(".welcome-box p");
     const button = $("#startBtn");
     const delay = 1000;
@@ -532,7 +543,7 @@ $(document).ready(function() {
         });
     });
 
-    // ========== Crystal Interactions ==========
+    // Crystal Interactions
     const crystalConfig = {
         "grey-crystal": { target: "#grey-box" },
         "pink-crystal": { target: "#pink-box" },
@@ -563,7 +574,7 @@ $(document).ready(function() {
         });
     });
 
-    // ========== Hotspot Interactions ==========
+    // Hotspot Interactions
     let newBox = null;
     const crystalsCollected = {
         grey: false,
@@ -574,12 +585,14 @@ $(document).ready(function() {
 
     $("#hotspot").on("click", function(e) {
         e.preventDefault();
+        console.log('Hotspot 1 clicked');
         $("#homeImage").addClass("fade-out");
         
         setTimeout(() => {
             $(".main-image")
                 .attr("src", "Path.jpeg")
                 .on("load", function() {
+                    adjustMap(); // Re-adjust map for new image
                     $(".crystal").addClass("crystal-visible");
                     $("#hotspot2").show();
 
@@ -613,6 +626,7 @@ $(document).ready(function() {
 
     $("#hotspot2").on("click", function(e) {
         e.preventDefault();
+        console.log('Hotspot 2 clicked');
         if (Object.values(crystalsCollected).every(v => v)) {
             $(".crystal, #new-box").animate({ opacity: 0 }, 1000, function() {
                 $(this).remove();
@@ -622,6 +636,7 @@ $(document).ready(function() {
                 $(".main-image")
                     .attr("src", "Guard.jpeg")
                     .on("load", function() {
+                        adjustMap(); // Re-adjust map for new image
                         $(".app")
                             .show()
                             .addClass("visible");
@@ -633,8 +648,8 @@ $(document).ready(function() {
         }
     });
 
-    // ========== Quiz System ==========
-    const questions = [ /* Keep your existing questions array here */ ];
+    // Quiz System
+    const questions = [ /* Your questions array */ ];
     const quizElements = {
         question: $("#question"),
         answers: $("#answer-buttons"),
@@ -715,6 +730,7 @@ $(document).ready(function() {
     // Initialize quiz
     startQuiz();
 });
+
 </script>
     </body>
 </html>
