@@ -82,12 +82,20 @@
     transition: all 0.3s ease;
     z-index: 1000;
     margin-top: 15px; /* Added more space from the text above */
-    display: none;
+    display: inline-block;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease, visibility 0.5s;
 }
         .button:hover {
             box-shadow: 0 0 10px rgba(11, 128, 167, 0.9);
             transform: scale(1.02);
         }
+
+        .button.visible {
+            opacity: 1:
+            visibility: visible;
+  }
 
         .crystal {
             position: absolute;
@@ -494,6 +502,7 @@ text-align: center;
 
 <script>
 $(document).ready(function() {
+  try {
     // ========== Image Map Scaling ==========
     const originalWidth = 1472;
     const originalHeight = 832;
@@ -541,16 +550,24 @@ $("#welcomeMessage")
 
         lines.each(function(index) {
             setTimeout(() => {
-                $(lines[index]).animate({ opacity: 1 }, 1000);
+                $(this).animate({ opacity: 1 }, 1000);
             }, delay * index);
         });
 
         setTimeout(() => {
-            button.show().css({ opacity: 0 }).animate({ opacity: 1 }, 1000);
+            button.css({ opacity: 0, display: "block" })
+              .animate({ opacity: 1 }, 1000);
         }, delay * lines.length);
     });
 
     // ========== Crystal Interactions ==========
+
+const crystalsCollected = {
+    grey: false,
+    pink: false,
+    red: false,
+    blue: false
+};
     const crystalConfig = {
         "grey-crystal": { 
             target: "#grey-box",
@@ -580,13 +597,7 @@ $("#welcomeMessage")
         }
     };
 
-  // Add this after crystalConfig declaration
-const crystalsCollected = {
-    grey: false,
-    pink: false,
-    red: false,
-    blue: false
-};
+ 
 
 // Update crystal click handler
 Object.entries(crystalConfig).forEach(([id, config]) => {
@@ -604,12 +615,6 @@ Object.entries(crystalConfig).forEach(([id, config]) => {
 
     // ========== Hotspot Interactions ==========
     let newBox = null;
-    const crystalsCollected = {
-        grey: false,
-        pink: false,
-        red: false,
-        blue: false
-    };
 
     $("#hotspot").on("click", function(e) {
         e.preventDefault();
@@ -829,7 +834,15 @@ Object.entries(crystalConfig).forEach(([id, config]) => {
 
     // Initialize quiz
     startQuiz();
+
+ } catch (error) {
+                  console.error("Initialization error:", error);
+                  $("#welcomeMessage").show().css({ opacity: 1 });
+                  $("#startBtn").show().css({ opacity: 1 });
+}
 });
+
+
 </script>
     </body>
 </html>
