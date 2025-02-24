@@ -407,6 +407,11 @@ text-align: center;
     transform: scale(1.05);
 }
 
+  #hotspot2 {
+    opacity: 0;
+    transition: opacity 1s ease;
+  }
+
 
     </style>
 </head>
@@ -492,7 +497,7 @@ text-align: center;
 
 <script>
 $(document).ready(function() {
-    // ========== Image Map Scaling Fix ==========
+    // ========== Image Map Scaling ==========
     const originalWidth = 1472;
     const originalHeight = 832;
     
@@ -501,7 +506,6 @@ $(document).ready(function() {
         const currentWidth = img.width();
         const currentHeight = img.height();
         
-        // Only adjust if image has valid dimensions
         if (currentWidth > 0 && currentHeight > 0) {
             const scaleX = currentWidth / originalWidth;
             const scaleY = currentHeight / originalHeight;
@@ -520,13 +524,15 @@ $(document).ready(function() {
     $('.main-image').on('load', function() {
         adjustMap();
         $(window).on('resize', adjustMap);
-    }).trigger('load'); // Force trigger if already loaded
+    }).trigger('load');
+
+    // ========== Element Visibility Initialization ==========
+    $('.crystal, #hotspot2').hide().css('opacity', 0);
 
     // ========== Hotspot Fixes ==========
-    $('area').attr('href', 'javascript:void(0);'); // Ensure clickable behavior
-    
-    // ========== Rest of Your Script ==========
-    // Welcome Sequence
+    $('area').attr('href', 'javascript:void(0);');
+
+    // ========== Welcome Sequence ==========
     const lines = $(".welcome-box p");
     const button = $("#startBtn");
     const delay = 1000;
@@ -543,13 +549,20 @@ $(document).ready(function() {
         });
     });
 
-    // Crystal Interactions
+    // ========== Crystal Interactions ==========
     const crystalConfig = {
-        "grey-crystal": { target: "#grey-box" },
-        "pink-crystal": { target: "#pink-box" },
+        "grey-crystal": { 
+            target: "#grey-box",
+            collectedKey: "grey"
+        },
+        "pink-crystal": { 
+            target: "#pink-box",
+            collectedKey: "pink"
+        },
         "red-crystal": {
             target: "#red-box",
-            content: "<div class='crystal-text'>Disadvantages of AI<br>AI may produce inaccurate or misleading info while sounding highly convincing.<br>AI generated content may include copyrighted or deepfake content, leading to legal and ethical concerns</div>",
+            collectedKey: "red",
+            content: "<div class='crystal-text'>Disadvantages of AI...",
             style: {
                 backgroundColor: "rgba(255, 0, 0, 0.8)",
                 boxShadow: "0 0 10px rgba(255, 0, 0, 0.8)"
@@ -557,7 +570,8 @@ $(document).ready(function() {
         },
         "blue-crystal": {
             target: "#blue-box",
-            content: "<div class='crystal-text'>When using Gen AI, <br>Always flag or tag AI-generated content to prevent misinformation <br>Verify sources when using info produced by gen ai</div>",
+            collectedKey: "blue",
+            content: "<div class='crystal-text'>When using Gen AI...",
             style: {
                 backgroundColor: "rgba(0, 0, 255, 0.8)",
                 boxShadow: "0 0 10px rgba(0, 0, 255, 0.8)"
@@ -571,10 +585,11 @@ $(document).ready(function() {
             if (config.content) target.html(config.content);
             if (config.style) target.css(config.style);
             target.css("opacity", "1");
+            crystalsCollected[config.collectedKey] = true;
         });
     });
 
-    // Hotspot Interactions
+    // ========== Hotspot Interactions ==========
     let newBox = null;
     const crystalsCollected = {
         grey: false,
@@ -585,16 +600,16 @@ $(document).ready(function() {
 
     $("#hotspot").on("click", function(e) {
         e.preventDefault();
-        console.log('Hotspot 1 clicked');
         $("#homeImage").addClass("fade-out");
         
         setTimeout(() => {
             $(".main-image")
                 .attr("src", "Path.jpeg")
                 .on("load", function() {
-                    adjustMap(); // Re-adjust map for new image
-                    $(".crystal").addClass("crystal-visible");
-                    $("#hotspot2").show();
+                    adjustMap();
+                    // Show crystals and hotspot2
+                    $(".crystal").fadeTo(1000, 1);
+                    $("#hotspot2").fadeTo(1000, 1).show();
 
                     if (!newBox) {
                         newBox = $(`<div id="new-box">
@@ -626,7 +641,6 @@ $(document).ready(function() {
 
     $("#hotspot2").on("click", function(e) {
         e.preventDefault();
-        console.log('Hotspot 2 clicked');
         if (Object.values(crystalsCollected).every(v => v)) {
             $(".crystal, #new-box").animate({ opacity: 0 }, 1000, function() {
                 $(this).remove();
@@ -636,12 +650,12 @@ $(document).ready(function() {
                 $(".main-image")
                     .attr("src", "Guard.jpeg")
                     .on("load", function() {
-                        adjustMap(); // Re-adjust map for new image
+                        adjustMap();
                         $(".app")
+                            .fadeTo(1000, 1)
                             .show()
                             .addClass("visible");
-                    })
-                    .on("error", () => console.error("Failed to load Guard.jpeg"));
+                    });
             }, 1100);
         } else {
             alert("Learn from the Crystals before proceeding.");
