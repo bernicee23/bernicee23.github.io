@@ -6,6 +6,7 @@
   <title>Land of AI</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 
 <style>
@@ -548,168 +549,79 @@ text-align: center;
         <p>You are now well-equipped to be a user of Gen AI.</p>
     </div>
   
-        <script>
-    document.addEventListener("DOMContentLoaded", function() {
-    let lines = document.querySelectorAll(".welcome-box p");
-    let button = document.getElementById("startBtn");
-    let delay = 1000;
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    // Original image dimensions
+    const originalWidth = 1472;
+    const originalHeight = 832;
+    let crystalsCollected = 0;
 
-    lines.forEach((line, index) => {
-        setTimeout(() => {
-            line.style.opacity = "1";
-        }, delay * index);
+    // Welcome message animation
+    $('#welcomeMessage').css({opacity: 0, display: 'block'}).animate({opacity: 1}, 1000);
+    $('#welcomeMessage p').each(function(index) {
+        $(this).delay(1000 * index).animate({opacity: 1}, 1000);
+    });
+    $('#startBtn').delay(4000).show(0);
+
+    // Start button handler
+    $('#startBtn').click(() => $('#welcomeMessage').fadeOut(1000));
+
+    // Crystal interactions
+    $('.crystal').data('collected', false).click(function() {
+        if(!$(this).data('collected')) {
+            crystalsCollected++;
+            $(this).data('collected', true)
+                   .find('.crystal-box').fadeTo(200, 1).delay(2000).fadeTo(500, 0);
+        }
     });
 
-    setTimeout(() => {
-        button.style.display = "block";
-    }, delay * lines.length);
-
-    button.addEventListener("click", function() {
-        const welcomeMessage = document.getElementById("welcomeMessage");
-        welcomeMessage.style.transition = "opacity 1s";
-        welcomeMessage.style.opacity = "0";
-        setTimeout(() => {
-            welcomeMessage.style.display = "none";
-        }, 1000);
-    });
-
-    let greyCrystalClicked = false;
-    let pinkCrystalClicked = false;
-    let redCrystalClicked = false;
-    let blueCrystalClicked = false;
-
-    document.getElementById("grey-crystal").addEventListener("click", function() {
-        greyCrystalClicked = true;
-        document.getElementById("grey-box").style.opacity = "1";
-    });
-
-    document.getElementById("pink-crystal").addEventListener("click", function() {
-        pinkCrystalClicked = true;
-        document.getElementById("pink-box").style.opacity = "1";
-    });
-
-    document.getElementById("red-crystal").addEventListener("click", function() {
-        redCrystalClicked = true;
-        let redBox = document.getElementById("red-box");
-        redBox.innerHTML = "<div class='crystal-text'>Disadvantages of AI<br> AI may produce inaccurate or misleading info while sounding highly convincing.<br>AI generated content may include copyrighted or deepfake content, leading to legal and ethical concerns</div>";
-        redBox.style.backgroundColor = "rgba(255, 0, 0, 0.8)";
-        redBox.style.boxShadow = "0 0 10px rgba(255, 0, 0, 0.8)";
-        redBox.style.opacity = "1";
-    });
-
-    document.getElementById("blue-crystal").addEventListener("click", function() {
-        blueCrystalClicked = true;
-        let blueBox = document.getElementById("blue-box");
-        blueBox.innerHTML = "<div class='crystal-text'>When using Gen AI, <br>Always flag or tag AI-generated content to prevent misinformation <br>Verify sources when using info produced by gen ai</div>";
-        blueBox.style.backgroundColor = "rgba(0, 0, 255, 0.8)";
-        blueBox.style.boxShadow = "0 0 10px rgba(0, 0, 255, 0.8)";
-        blueBox.style.opacity = "1";
-    });
-
-    let newBox = null;
-
-    document.getElementById("hotspot").addEventListener("click", function() {
-        const homeImage = document.getElementById("homeImage");
-        homeImage.classList.add("fade-out");
-        setTimeout(() => {
-            let mainImage = document.querySelector(".main-image");
-            mainImage.src = "Path.jpeg";
-            mainImage.onload = function() {
-                document.querySelectorAll(".crystal").forEach(crystal => {
-                    crystal.classList.add("crystal-visible");
-                });
-                document.getElementById("hotspot2").style.display = "block";
-
-                if (!newBox) {
-                    newBox = document.createElement("div");
-                    newBox.id = "new-box";
-                    newBox.innerHTML = "<p>Collect the Crystals, they will aid you when you take on the Test.<br>Click on the Tower when you're done.</p>";
-                    newBox.style.position = "absolute";
-                    newBox.style.bottom = "20px";
-                    newBox.style.left = "50%";
-                    newBox.style.transform = "translateX(-50%)";
-                    newBox.style.backgroundColor = "rgba(11, 128, 167, 0.9)";
-                    newBox.style.boxShadow = "0 0 15px rgba(255, 0, 0, 0.8)";
-                    newBox.style.padding = "20px";
-                    newBox.style.borderRadius = "10px";
-                    newBox.style.textAlign = "center";
-                    newBox.style.width = "80%";
-                    newBox.style.maxWidth = "500px";
-                    newBox.style.opacity = "0";
-                    newBox.style.transition = "opacity 1s";
-                    newBox.style.zIndex = "2000";
-                    newBox.style.color = "white";
-                    document.body.appendChild(newBox);
-                }
-                setTimeout(() => {
-                    newBox.style.opacity = "1";
-                }, 50);
-            };
-        }, 1000);
-    }, {once: true});
-
-    document.getElementById("hotspot2").addEventListener("click", function() {
-    if (greyCrystalClicked && pinkCrystalClicked && redCrystalClicked && blueCrystalClicked) {
-        document.querySelectorAll(".crystal").forEach(element => {
-            element.style.transition = "opacity 1s";
-            element.style.opacity = "0";
+    // Dynamic image map scaling
+    function scaleImageMap() {
+        const $img = $('.main-image');
+        const currentWidth = $img.width();
+        const currentHeight = $img.height();
+        
+        $('area').each(function() {
+            const coords = $(this).attr('coords').split(',').map(Number);
+            const scaledCoords = coords.map((coord, index) => 
+                Math.round(coord * (index % 2 === 0 ? 
+                    currentWidth/originalWidth : 
+                    currentHeight/originalHeight))
+            );
+            $(this).attr('coords', scaledCoords.join(','));
         });
-
-        if (newBox) {
-            newBox.style.transition = "opacity 1s";
-            newBox.style.opacity = "0";
-            
-            // Changed section starts
-            setTimeout(() => {
-                newBox.remove();
-                let mainImage = document.querySelector(".main-image");
-                mainImage.src = "Guard.jpeg";
-                
-                // Add load event listener for the new image
-                mainImage.onload = function() {
-                    const appElement = document.querySelector('.app');
-                    appElement.style.display = 'block';
-                    appElement.classList.add('fade-in');
-                    setTimeout(() => {
-                        appElement.classList.add('visible');
-                    }, 50);
-                };
-                
-                // Add error handling
-                mainImage.onerror = function() {
-                    console.error("Failed to load Guard.jpeg");
-                    const appElement = document.querySelector('.app');
-                    appElement.style.display = 'block';
-                    appElement.classList.add('visible');
-                };
-            }, 1100);
-            // Changed section ends
-            
-        }
-    } else {
-        alert("Learn from the Crystals before proceeding.");
     }
-});
 
-    document.addEventListener("click", function(event) {
-        let greyBox = document.getElementById("grey-box");
-        let pinkBox = document.getElementById("pink-box");
-        let redBox = document.getElementById("red-box");
-        let blueBox = document.getElementById("blue-box");
+    // Initialize scaling
+    $('.main-image').on('load', scaleImageMap).trigger('load');
+    $(window).on('resize', scaleImageMap);
 
-        if (!greyBox.contains(event.target) && !pinkBox.contains(event.target) &&
-            !redBox.contains(event.target) && !blueBox.contains(event.target)) {
-            greyBox.style.transition = "opacity 0.5s";
-            pinkBox.style.transition = "opacity 0.5s";
-            redBox.style.transition = "opacity 0.5s";
-            blueBox.style.transition = "opacity 0.5s";
-            greyBox.style.opacity = "0";
-            pinkBox.style.opacity = "0";
-            redBox.style.opacity = "0";
-            blueBox.style.opacity = "0";
+    // Hotspot 1 click handler
+    $('area[alt="Hotspot 1"]').click(function(e) {
+        e.preventDefault();
+        $('.main-image').fadeTo(1000, 0, function() {
+            $(this).attr('src', 'Path.jpeg').fadeTo(1000, 1, function() {
+                $('.crystal, area[alt="Hotspot 2"]').fadeIn(1000);
+                scaleImageMap();
+            });
+        });
+    });
+
+    // Hotspot 2 click handler
+    $('area[alt="Hotspot 2"]').click(function(e) {
+        e.preventDefault();
+        if(crystalsCollected === 4) {
+            $('.main-image').fadeTo(1000, 0, function() {
+                $(this).attr('src', 'Guard.jpeg').fadeTo(1000, 1, function() {
+                    $('.app').fadeIn(1000);
+                    scaleImageMap();
+                });
+            });
+        } else {
+            alert('Collect all 4 crystals first!');
         }
     });
-});
 
 const questions = [
     {
