@@ -17,7 +17,7 @@
   margin: 0;
   font-family: 'Outfit', sans-serif;
   background-color: white;
-  overflow: visible; /*temp debug */
+  overflow: hidden;
   }
 
   .main-image {
@@ -64,6 +64,7 @@
   opacity: 0;
   transition: opacity 1s;
   color: white;
+  z-index: 9999;
   }
 
         @keyframes fadeIn {
@@ -420,6 +421,7 @@ text-align: center;
 <body>
     <audio id="background-audio" src="futuristic-sci-fi-cinematic-112293.mp3" autoplay loop></audio>
 
+
     <div class="welcome-box" id="welcomeMessage">
         <p>Welcome, traveller.</p>
         <p>This is the land of AI.</p>
@@ -427,124 +429,246 @@ text-align: center;
         <p>Go through the door on the right when you're ready.</p>
         <button id="startBtn" class="button" style="display: none;">Let's Go</button>
     </div>
-
+  
     <img src="https://bernicee23.github.io/Home.jpeg" class="main-image" alt="Background Image" usemap="#image-map">
+    <img id="homeImage" src="Home.jpeg" alt="Home Image" style="display:none;">
+    <div class="crystal" id="crystal1">Crystal 1</div>
+    <div class="crystal" id="crystal2">Crystal 2</div>
+
     <map name="image-map">
-        <area shape="rect" coords="500,137,1218,660" alt="Hotspot1" class="hotspot">
-        <area shape="rect" coords="698,4,878,482" alt="Hotspot2" class="hotspot" style="display: none;">
+        <area shape="rect" coords="500,137,1218,660" alt="Hotspot 1" id="hotspot" href="javascript:void(0);">
+        <area shape="rect" coords="698,4,878,482" alt="Hotspot 2" id="hotspot2" href="javascript:void(0);">
     </map>
+    
 
     <div class="crystal" id="grey-crystal">
         <img src="Grey Crystal.png" alt="Grey Crystal">
         <div class="crystal-box" id="grey-box">
-            <div class="crystal-text">What is AI? It is a type of technology that can produce various types of content...</div>
+            <div class="crystal-text">What is AI? It is a type of technology that can produce various types of content, including text, imagery, audio, and synthetic data.</div>
         </div>
     </div>
 
     <div class="crystal" id="pink-crystal">
         <img src="Pink Crystal.png" alt="Pink Crystal">
         <div class="crystal-box" id="pink-box">
-            <div class="crystal-text">Advantages of AI...</div>
+            <div class="crystal-text">Advantages of AI<br>AI can help enhance your creativity, improve on your ideas, and increase productivity!<br>AI can help you increase efficiency by automating repetitive tasks like drafting emails, summarising documents, and generating reports.</div>
         </div>
     </div>
 
+    <div class="bottom-box">
+        <p>Learn from these Crystals as you hike to the Tower. Once you're done, you may proceed.</p>
+    </div>
+
+    <div class="bottom-box bottom-box-picture2">
+        <p>More crystals! These should be the last of them before you enter the Tower. Good luck!</p>
+    </div>
+    
     <div class="crystal" id="red-crystal">
         <img src="Red Crystal.png" alt="Red Crystal">
         <div class="crystal-box" id="red-box">
-            <div class="crystal-text">Disadvantages of AI...</div>
+            <div class="crystal-text">What are the disadvantages of AI?<br>Misinformation - AI may produce inaccurate or misleading information while sounding highly convincing.<br>Deepfake & Ethical concerns - May include copyrighted content, leading to legal and ethical concerns.</div>
         </div>
     </div>
-
+    
     <div class="crystal" id="blue-crystal">
         <img src="Blue Crystal.png" alt="Blue Crystal">
         <div class="crystal-box" id="blue-box">
-            <div class="crystal-text">Things to Note...</div>
+            <div class="crystal-text">Things to Note when using Gen AI<br>When Posting - Always flag or tag your content as AI-generated to prevent misinformation!<br>Verify - Check sources when using information produced by any Gen AI.</div>
         </div>
     </div>
 
     <div class="app">
-        <h1>It's time to take the Test. <br>Pass and you may proceed.</h1>
-        <div class="quiz">
-            <h2 id="question">Question goes here</h2>
-            <div id="answer-buttons">
-                <button class="btn">Answer 1</button>
-                <button class="btn">Answer 2</button>
-                <button class="btn">Answer 3</button>
-                <button class="btn">Answer 4</button>
-            </div>
-            <button id="next-btn">Next</button>
-        </div>
-    </div>
+      <h1>It's time to take the Test. <br>Pass and you may proceed.</h1>
+      <div class="quiz">
+          <h2 id="question">Question goes here</h2>
+          <div id="answer-buttons">
+              <button class="btn">Answer 1</button>
+              <button class="btn">Answer 2</button>
+              <button class="btn">Answer 3</button>
+              <button class="btn">Answer 4</button>
+          </div>
+          <button id="next-btn">Next</button>
+      </div>
+  </div>
+  
+<script>
+$(document).ready(function() {
+    // ========== Image Map Scaling ==========
+    const originalWidth = 1472;
+    const originalHeight = 832;
+    
+    function adjustMap() {
+        const img = $('.main-image');
+        if (!img) return;
 
-    <script>
-    $(document).ready(function() {
-        // Initialize elements
-        $('.crystal, .hotspot').hide();
-        $('#welcomeMessage').css({opacity: 0, display: 'block'});
+        const naturalWidth = img.naturalWidth;
+        const naturalHeight = img.naturalHeight;
+        const currentWidth = img.width;
+        const currentHeight = img.height;
+        
+        if (currentWidth > 0 && currentHeight > 0) {
+            const scaleX = currentWidth / naturalWidth;
+            const scaleY = currentHeight / naturalHeight;
 
-        // Welcome sequence
-        $('#welcomeMessage').animate({opacity: 1}, 1000, function() {
-            const lines = $(this).find('p');
-            lines.each((index, line) => {
-                setTimeout(() => $(line).css("opacity", "1"), 1000 * (index + 1));
-            });
-            setTimeout(() => $('#startBtn').show(), 1000 * (lines.length + 1));
-        });
-
-        $('#startBtn').click(() => $('#welcomeMessage').fadeOut(1000));
-
-        // Image map scaling
-        function scaleCoords() {
-            const $img = $('.main-image');
-            const origWidth = 1472, origHeight = 832;
-            const currWidth = $img.width(), currHeight = $img.height();
-            
             $('area').each(function() {
-                const coords = $(this).attr('coords').split(',').map(coord => {
-                    return Math.round((coord / origWidth) * currWidth);
-                });
-                $(this).attr('coords', coords.join(','));
+                const coords = $(this).attr('coords').split(',').map(Number);
+                const newCoords = coords.map((coord, index) => 
+                    Math.round(coord * (index % 2 === 0 ? scaleX : scaleY))
+                );
+                $(this).attr('coords', newCoords.join(','));
             });
         }
+    }
 
-        $('.main-image').on('load', scaleCoords).trigger('load');
-        $(window).resize(scaleCoords);
+    // Initialize with image load event
+    $('.main-image').on('load', function() {
+        adjustMap();
+        $(window).on('resize', adjustMap);
+    }).trigger('load');
 
-        // Hotspot interactions
-        $('area[alt="Hotspot1"]').click(function() {
-            $('.main-image').fadeOut(1000, function() {
-                $(this).attr('src', 'Path.jpeg').fadeIn(1000, function() {
-                    $('.crystal, area[alt="Hotspot2"]').fadeIn(1000);
-                    scaleCoords();
-                });
-            });
+    // ========== Element Visibility Initialization ==========
+    $('.crystal, #hotspot2').css('opacity', 0).hide();
+
+    // ========== Hotspot Fixes ==========
+    $('area').attr('href', 'javascript:void(0);');
+
+    // ========== Welcome Sequence ==========
+    const lines = $(".welcome-box p");
+    const button = $("#startBtn");
+    const delay = 1000;
+
+    lines.each((index, line) => {
+        setTimeout(() => $(line).css("animation", "fadeIn 3s forwards");
+    }, 100);
+
+    setTimeout(() => button.show(), delay * lines.length);
+
+    button.on("click", function() {
+        $("#welcomeMessage").animate({ opacity: 0 }, 1000, () => {
+            $("#welcomeMessage").hide();
         });
+    });
 
-        $('area[alt="Hotspot2"]').click(function() {
-            const crystalsCollected = ['grey', 'pink', 'red', 'blue'].every(id => 
-                $(`#${id}-crystal`).data('collected')
-            );
-            
-            if(crystalsCollected) {
-                $('.main-image').fadeOut(1000, function() {
-                    $(this).attr('src', 'Guard.jpeg').fadeIn(1000, () => {
-                        $('.app').fadeIn(1000);
-                        scaleCoords();
-                    });
-                });
-            } else {
-                alert('Collect all crystals first!');
+    // ========== Crystal Interactions ==========
+    const crystalConfig = {
+        "grey-crystal": { 
+            target: "#grey-box",
+            collectedKey: "grey"
+        },
+        "pink-crystal": { 
+            target: "#pink-box",
+            collectedKey: "pink"
+        },
+        "red-crystal": {
+            target: "#red-box",
+            collectedKey: "red",
+            content: "<div class='crystal-text'>Disadvantages of AI...",
+            style: {
+                backgroundColor: "rgba(255, 0, 0, 0.8)",
+                boxShadow: "0 0 10px rgba(255, 0, 0, 0.8)"
             }
-        });
+        },
+        "blue-crystal": {
+            target: "#blue-box",
+            collectedKey: "blue",
+            content: "<div class='crystal-text'>When using Gen AI...",
+            style: {
+                backgroundColor: "rgba(0, 0, 255, 0.8)",
+                boxShadow: "0 0 10px rgba(0, 0, 255, 0.8)"
+            }
+        }
+    };
 
-        // Crystal interactions
-        $('.crystal').click(function() {
-            const $box = $(this).find('.crystal-box');
-            $(this).data('collected', true);
-            $box.fadeTo(200, 1).delay(2000).fadeTo(500, 0);
+    Object.entries(crystalConfig).forEach(([id, config]) => {
+        $(`#${id}`).on("click", function() {
+            const target = $(config.target);
+            if (config.content) target.html(config.content);
+            if (config.style) target.css(config.style);
+            target.css("opacity", "1");
+            crystalsCollected[config.collectedKey] = true;
+            console.log('Collected crystals:', crystalsCollected);
         });
+    });
 
-</body>
+    // ========== Hotspot Interactions ==========
+    let newBox = null;
+    const crystalsCollected = {
+        grey: false,
+        pink: false,
+        red: false,
+        blue: false
+    };
+
+    $("#hotspot").on("click", function(e) {
+        e.preventDefault();
+        $("#homeImage").addClass("fade-out");
+        
+        setTimeout(() => {
+            $(".main-image")
+                .attr("src", "Path.jpeg")
+                .on("load", function() {
+                    adjustMap();
+                    // Show crystals and hotspot2 with proper animation
+                    $(".crystal").css({
+                        'display': 'block',
+                        'opacity': 0
+                    }).animate({opacity: 1}, 1000);
+                    $("#hotspot2").css({
+                        'display': 'block',
+                        'opacity': 0
+                    }).animate({opacity: 1}, 1000);
+
+                    if (!newBox) {
+                        newBox = $(`<div id="new-box">
+                            <p>Collect the Crystals, they will aid you when you take on the Test.<br>
+                            Click on the Tower when you're done.</p>
+                        </div>`).css({
+                            position: "absolute",
+                            bottom: "20px",
+                            left: "50%",
+                            transform: "translateX(-50%)",
+                            backgroundColor: "rgba(11, 128, 167, 0.9)",
+                            boxShadow: "0 0 15px rgba(255, 0, 0, 0.8)",
+                            padding: "20px",
+                            borderRadius: "10px",
+                            textAlign: "center",
+                            width: "80%",
+                            maxWidth: "500px",
+                            opacity: "0",
+                            transition: "opacity 1s",
+                            zIndex: "2000",
+                            color: "white"
+                        }).appendTo("body");
+
+                        setTimeout(() => newBox.css("opacity", "1"), 50);
+                    }
+                });
+        }, 1000);
+    });
+
+    $("#hotspot2").on("click", function(e) {
+        e.preventDefault();
+        console.log('Crystals collected status:', crystalsCollected);
+        if (Object.values(crystalsCollected).every(v => v)) {
+            $(".crystal, #new-box").animate({ opacity: 0 }, 1000, function() {
+                $(this).remove();
+            });
+
+            setTimeout(() => {
+                $(".main-image")
+                    .attr("src", "Guard.jpeg")
+                    .on("load", function() {
+                        adjustMap();
+                        $(".app")
+                            .fadeTo(1000, 1)
+                            .show()
+                            .addClass("visible");
+                    });
+            }, 1100);
+        } else {
+            alert("Learn from all four Crystals before proceeding.");
+        }
+    });
   
     // Quiz System
    const questions = [
@@ -733,8 +857,6 @@ nextButton.addEventListener("click", ()=>{
     }
 });
 
-
-startQuiz();
 </script>
     </body>
 </html>
