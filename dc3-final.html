@@ -37,9 +37,7 @@
   border-radius: 10px;
   text-align: center;
   box-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
-  opacity: 0;
-  animation: fadeIn 3s forwards;
-  animation-delay: 0.5s;
+  opacity: 1 !important;
   width: 80%;
   max-width: 500px;
   height: 250px;
@@ -48,6 +46,11 @@
   justify-content: stretch; /* Ensure button has space */
   z-index: 9999;
   }
+
+  #welcomeMessage {
+    display: flex !important;
+    opacity: 1 !important;
+  )
 
   #homeImage {
   transition: opacity 1s ease;
@@ -423,20 +426,19 @@ text-align: center;
 </head>
 <body>
     <audio id="background-audio" src="futuristic-sci-fi-cinematic-112293.mp3" autoplay loop></audio>
+  
+    <img src="https://bernicee23.github.io/Home.jpeg" class="main-image" alt="Background Image" usemap="#image-map">
+    <img id="homeImage" src="Home.jpeg" alt="Home Image" style="display:none;">
+    <div class="crystal" id="crystal1">Crystal 1</div>
+    <div class="crystal" id="crystal2">Crystal 2</div>
 
-
-    <div class="welcome-box" id="welcomeMessage">
+   <div class="welcome-box" id="welcomeMessage">
         <p>Welcome, traveller.</p>
         <p>This is the land of AI.</p>
         <p>Before you join us in the Tower of Knowledge, you must pass the guard's Test.</p>
         <p>Go through the door when you're ready.</p>
         <button id="startBtn" class="button" style="display: none;">Let's Go</button>
     </div>
-  
-    <img src="https://bernicee23.github.io/Home.jpeg" class="main-image" alt="Background Image" usemap="#image-map">
-    <img id="homeImage" src="Home.jpeg" alt="Home Image" style="display:none;">
-    <div class="crystal" id="crystal1">Crystal 1</div>
-    <div class="crystal" id="crystal2">Crystal 2</div>
 
     <map name="image-map">
         <area shape="rect" coords="789,137,1218,660" alt="Hotspot 1" id="hotspot" href="javascript:void(0);">
@@ -546,13 +548,13 @@ $(document).ready(function() {
     });
 
     setTimeout(() => button.show(), delay * lines.length);
-  },500);
-
     button.on("click", function() {
         $("#welcomeMessage").animate({ opacity: 0 }, 1000, () => {
             $("#welcomeMessage").hide();
         });
     });
+
+     },500);
 
     // ========== Crystal Interactions ==========
     const crystalConfig = {
