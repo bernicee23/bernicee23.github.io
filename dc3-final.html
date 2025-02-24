@@ -37,7 +37,8 @@
   border-radius: 10px;
   text-align: center;
   box-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
-  opacity: 1 !important;
+  opacity: 0;
+  animation: fadeIn 3s forwards;
   width: 80%;
   max-width: 500px;
   height: 250px;
@@ -47,10 +48,10 @@
   z-index: 9999;
   }
 
-  #welcomeMessage {
+#welcomeMessage {
     display: flex !important;
     opacity: 1 !important;
-  )
+}
 
   #homeImage {
   transition: opacity 1s ease;
@@ -66,7 +67,7 @@
   font-weight: 400; /* Less bold */
   margin: 10px 0px;
   opacity: 0;
-  transition: opacity 1s;
+  transition: opacity 1s ease-in-out;
   color: white;
   }
 
@@ -88,7 +89,7 @@
     transition: all 0.3s ease;
     z-index: 1000;
     margin-top: 15px; /* Added more space from the text above */
-    display: block !important;
+    display: none;
     opacity: 1 !important;
 }
         .button:hover {
@@ -536,25 +537,29 @@ $(document).ready(function() {
     $('area').attr('href', 'javascript:void(0);');
 
     // ========== Welcome Sequence ==========
-  setTimeout(() => {
-    $("#welcomeMessage").css("animation", "fadeIn 3s forwards");
-    
-    const lines = $(".welcome-box p");
-    const button = $("#startBtn");
-    const delay = 1000;
+$("#welcomeMessage").css("opacity", 0).show().animate({ opacity: 1 }, 1000);
 
-    lines.each((index, line) => {
-        setTimeout(() => $(line).css("opacity", "1"), delay * index);
+const lines = $(".welcome-box p");
+const button = $("#startBtn");
+const delay = 1000;
+
+// Animate paragraphs
+lines.each((index, line) => {
+    setTimeout(() => {
+        $(line).animate({ opacity: 1 }, 1000);
+    }, delay * index);
+});
+
+// Show button after all paragraphs
+setTimeout(() => {
+    button.css("opacity", 0).show().animate({ opacity: 1 }, 1000);
+}, delay * lines.length);
+
+button.on("click", function() {
+    $("#welcomeMessage").animate({ opacity: 0 }, 1000, () => {
+        $("#welcomeMessage").hide();
     });
-
-    setTimeout(() => button.show(), delay * lines.length);
-    button.on("click", function() {
-        $("#welcomeMessage").animate({ opacity: 0 }, 1000, () => {
-            $("#welcomeMessage").hide();
-        });
-    });
-
-     },500);
+});
 
     // ========== Crystal Interactions ==========
     const crystalConfig = {
