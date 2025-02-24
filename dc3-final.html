@@ -434,7 +434,7 @@ text-align: center;
 
     <map name="image-map">
         <area shape="rect" coords="789,137,1218,660" alt="Hotspot 1" id="hotspot" href="javascript:void(0);">
-        <area shape="rect" coords="698,4,878,4823" alt="Hotspot 2" id="hotspot2" href="javascript:void(0);">
+        <area shape="rect" coords="698,4,878,482" alt="Hotspot 2" id="hotspot2" href="javascript:void(0);">
     </map>
     
 
@@ -495,6 +495,14 @@ text-align: center;
     </div>
   
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- ... (keep head section exactly as is) ... -->
+</head>
+<body>
+    <!-- ... (keep body content exactly as is) ... -->
+
 <script>
 $(document).ready(function() {
     // ========== Image Map Scaling ==========
@@ -527,7 +535,7 @@ $(document).ready(function() {
     }).trigger('load');
 
     // ========== Element Visibility Initialization ==========
-    $('.crystal, #hotspot2').hide().css('opacity', 0);
+    $('.crystal, #hotspot2').css('opacity', 0).hide();
 
     // ========== Hotspot Fixes ==========
     $('area').attr('href', 'javascript:void(0);');
@@ -586,6 +594,7 @@ $(document).ready(function() {
             if (config.style) target.css(config.style);
             target.css("opacity", "1");
             crystalsCollected[config.collectedKey] = true;
+            console.log('Collected crystals:', crystalsCollected);
         });
     });
 
@@ -607,9 +616,15 @@ $(document).ready(function() {
                 .attr("src", "Path.jpeg")
                 .on("load", function() {
                     adjustMap();
-                    // Show crystals and hotspot2
-                    $(".crystal").fadeTo(1000, 1);
-                    $("#hotspot2").fadeTo(1000, 1).show();
+                    // Show crystals and hotspot2 with proper animation
+                    $(".crystal").css({
+                        'display': 'block',
+                        'opacity': 0
+                    }).animate({opacity: 1}, 1000);
+                    $("#hotspot2").css({
+                        'display': 'block',
+                        'opacity': 0
+                    }).animate({opacity: 1}, 1000);
 
                     if (!newBox) {
                         newBox = $(`<div id="new-box">
@@ -641,6 +656,7 @@ $(document).ready(function() {
 
     $("#hotspot2").on("click", function(e) {
         e.preventDefault();
+        console.log('Crystals collected status:', crystalsCollected);
         if (Object.values(crystalsCollected).every(v => v)) {
             $(".crystal, #new-box").animate({ opacity: 0 }, 1000, function() {
                 $(this).remove();
@@ -658,10 +674,10 @@ $(document).ready(function() {
                     });
             }, 1100);
         } else {
-            alert("Learn from the Crystals before proceeding.");
+            alert("Learn from all four Crystals before proceeding.");
         }
     });
-
+  
     // Quiz System
     const questions = [ /* Your questions array */ ];
     const quizElements = {
