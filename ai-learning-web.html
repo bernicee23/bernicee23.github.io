@@ -95,7 +95,6 @@
   text-align: center;
   box-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
   opacity: 0;
-  animation: fadeIn 3s forwards;
   width: 80%;
   max-width: 500px;
   height: 250px;
@@ -121,6 +120,7 @@
   opacity: 0;
   transition: opacity 1s;
   color: white;
+  z-index: 9999
   }
 
         @keyframes fadeIn {
@@ -467,6 +467,7 @@ text-align: center;
 .main-img{
   height: 100%;
   width: auto;
+  z-index: 1;
 }
 
     </style>
@@ -551,7 +552,6 @@ text-align: center;
   
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-<script>
 $(document).ready(function() {
     // Original image dimensions
     const originalWidth = 1472;
@@ -560,14 +560,15 @@ $(document).ready(function() {
 
     // Initialize elements
     $('.crystal, #hotspot2').hide();
-    $('#welcomeMessage').css({opacity: 0, display: 'block'});
-
-    // Welcome message animation
-    $('#welcomeMessage').animate({opacity: 1}, 1000);
-    $('#welcomeMessage p').each(function(index) {
-        $(this).delay(1000 * index).animate({opacity: 1}, 1000);
+    
+    // Welcome message animation - FIXED
+    $('#welcomeMessage').css({opacity: 0, display: 'block'})
+      .animate({opacity: 1}, 1000, function() {
+        $(this).find('p').each(function(index) {
+            $(this).delay(1000 * index).animate({opacity: 1}, 1000);
+        });
+        $('#startBtn').delay(4000).show(0);
     });
-    $('#startBtn').delay(4000).show(0);
 
     // Start button handler
     $('#startBtn').click(() => $('#welcomeMessage').fadeOut(1000));
