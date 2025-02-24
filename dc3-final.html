@@ -20,13 +20,6 @@
   overflow: hidden;
   }
 
-  .main-image {
-  width: 100%;
-  height: auto;
-  position: relative;
-    z-index: 1000
-  }
-
   .welcome-box {
   position: absolute;
   top: 50%;
@@ -37,8 +30,6 @@
   border-radius: 10px;
   text-align: center;
   box-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
-  opacity: 0;
-  animation: fadeIn 3s forwards;
   width: 80%;
   max-width: 500px;
   height: 250px;
@@ -48,11 +39,13 @@
   z-index: 9999;
   }
 
-#welcomeMessage {
-    display: flex !important;
-    opacity: 1 !important;
-}
-
+  .main-image {
+  width: 100%;
+  height: auto;
+  position: relative;
+    z-index: 1000
+  }
+  
   #homeImage {
   transition: opacity 1s ease;
   opacity: 1;
@@ -90,7 +83,6 @@
     z-index: 1000;
     margin-top: 15px; /* Added more space from the text above */
     display: none;
-    opacity: 1 !important;
 }
         .button:hover {
             box-shadow: 0 0 10px rgba(11, 128, 167, 0.9);
@@ -530,36 +522,31 @@ $(document).ready(function() {
     }).trigger('load');
 
     // ========== Element Visibility Initialization ==========
-    $('.crystal).css('opacity', 0);
+    $('.crystal').css('opacity', 0);
     $('#hotspot2').hide();
 
     // ========== Hotspot Fixes ==========
     $('area').attr('href', 'javascript:void(0);');
 
     // ========== Welcome Sequence ==========
-$("#welcomeMessage").css("opacity", 0).show().animate({ opacity: 1 }, 1000);
+$("#welcomeMessage")
+    .css({ opacity: 0, display: "flex" })
+    .animate({ opacity: 1 }, 1000, function() {
+        const lines = $(".welcome-box p");
+        const button = $("#startBtn");
+        const delay = 1000;
 
-const lines = $(".welcome-box p");
-const button = $("#startBtn");
-const delay = 1000;
+        lines.each((index, line) => {
+            setTimeout(() => {
+                $(line).animate({ opacity: 1 }, 1000);
+            }, delay * index);
+        });
 
-// Animate paragraphs
-lines.each((index, line) => {
-    setTimeout(() => {
-        $(line).animate({ opacity: 1 }, 1000);
-    }, delay * index);
-});
-
-// Show button after all paragraphs
-setTimeout(() => {
-    button.css("opacity", 0).show().animate({ opacity: 1 }, 1000);
-}, delay * lines.length);
-
-button.on("click", function() {
-    $("#welcomeMessage").animate({ opacity: 0 }, 1000, () => {
-        $("#welcomeMessage").hide();
+        setTimeout(() => {
+            button.css({ opacity: 0, display: "block" })
+                  .animate({ opacity: 1 }, 1000);
+        }, delay * lines.length);
     });
-});
 
     // ========== Crystal Interactions ==========
     const crystalConfig = {
@@ -624,7 +611,8 @@ button.on("click", function() {
                     adjustMap();
                     // Show crystals and hotspot2 with proper animation
                     $(".crystal")
-                      .css('display', 'block')
+                      .css('display', 'block', opacity: 0})
+                      .delay(500)
                       .animate({opacity: 1}, 1000);
                     $("#hotspot2")
                       .show()
