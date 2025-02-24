@@ -64,7 +64,6 @@
   opacity: 0;
   transition: opacity 1s;
   color: white;
-  z-index: 9999;
   }
 
         @keyframes fadeIn {
@@ -95,7 +94,6 @@
             position: absolute;
             opacity: 0;
             transition: opacity 0.5s ease;
-            z-index: 2000;
         }
 
         .crystal-visible {
@@ -187,7 +185,6 @@
 
         .crystal-box{
             transition: opacity 0.5s ease-in-out;
-            font-size: 18px;
         }
 
         .bottom-box {
@@ -212,8 +209,8 @@
 }
 
 #red-crystal {
-    top: 50%;
-    left: 60%;
+    top: 60%;
+    left: 70%;
     width: 110px; /* Adjust width */
     position: absolute;
     transition: opacity 0.5s, transform 0.3s; /* Added transition */
@@ -221,7 +218,7 @@
 
 #blue-crystal {
     top: 60%;
-    left: 10%;
+    left: 20%;
     width: 110px; /* Adjust width */
     position: absolute;
     transition: opacity 0.5s, transform 0.3s; /* Added transition */
@@ -426,7 +423,7 @@ text-align: center;
         <p>Welcome, traveller.</p>
         <p>This is the land of AI.</p>
         <p>Before you join us in the Tower of Knowledge, you must pass the guard's Test.</p>
-        <p>Go through the door on the right when you're ready.</p>
+        <p>Go through the door when you're ready.</p>
         <button id="startBtn" class="button" style="display: none;">Let's Go</button>
     </div>
   
@@ -436,7 +433,7 @@ text-align: center;
     <div class="crystal" id="crystal2">Crystal 2</div>
 
     <map name="image-map">
-        <area shape="rect" coords="500,137,1218,660" alt="Hotspot 1" id="hotspot" href="javascript:void(0);">
+        <area shape="rect" coords="789,137,1218,660" alt="Hotspot 1" id="hotspot" href="javascript:void(0);">
         <area shape="rect" coords="698,4,878,482" alt="Hotspot 2" id="hotspot2" href="javascript:void(0);">
     </map>
     
@@ -490,7 +487,13 @@ text-align: center;
           <button id="next-btn">Next</button>
       </div>
   </div>
-  
+
+  <div class="congrats-box" id="congratsMessage">
+       <p>Congratulations on passing the test and</p>
+        <p>reaching the Tower of Knowledge.</p>
+        <p>You are now well-equipped to be a user of Gen AI.</p>
+    </div>
+
 <script>
 $(document).ready(function() {
     // ========== Image Map Scaling ==========
@@ -499,16 +502,12 @@ $(document).ready(function() {
     
     function adjustMap() {
         const img = $('.main-image');
-        if (!img) return;
-
-        const naturalWidth = img.naturalWidth;
-        const naturalHeight = img.naturalHeight;
-        const currentWidth = img.width;
-        const currentHeight = img.height;
+        const currentWidth = img.width();
+        const currentHeight = img.height();
         
         if (currentWidth > 0 && currentHeight > 0) {
-            const scaleX = currentWidth / naturalWidth;
-            const scaleY = currentHeight / naturalHeight;
+            const scaleX = currentWidth / originalWidth;
+            const scaleY = currentHeight / originalHeight;
 
             $('area').each(function() {
                 const coords = $(this).attr('coords').split(',').map(Number);
@@ -538,8 +537,8 @@ $(document).ready(function() {
     const delay = 1000;
 
     lines.each((index, line) => {
-        setTimeout(() => $(line).css("animation", "fadeIn 3s forwards");
-    }, 100);
+        setTimeout(() => $(line).css("opacity", "1"), delay * index);
+    });
 
     setTimeout(() => button.show(), delay * lines.length);
 
@@ -671,8 +670,8 @@ $(document).ready(function() {
     });
   
     // Quiz System
-   const questions = [
-    {
+    const questions = [
+ {
         question: "What is AI?",
         answers: [
             { text: "A type of technology that produces various types of content", correct: true},
@@ -735,128 +734,87 @@ $(document).ready(function() {
             { text: "Only share AI content without checking its source", correct: false},
         ]
     }    
-];
+    ];
+    const quizElements = {
+        question: $("#question"),
+        answers: $("#answer-buttons"),
+        nextBtn: $("#next-btn")
+    };
+    
+    let currentQuestionIndex = 0;
+    let score = 0;
 
-const questionElement = document.getElementById("question");
-const answerButtons = document.getElementById("answer-buttons");
-const nextButton = document.getElementById("next-btn");
-
-let currentQuestionIndex = 0;
-let score = 0;
-
-function startQuiz(){
-    currentQuestionIndex = 0;
-    score = 0;
-    nextButton.innerHTML = "Next";
-    showQuestion();
-}
-
-function showQuestion(){
-    resetState();
-    let currentQuestion = questions[currentQuestionIndex];
-    let questionNo = currentQuestionIndex + 1;
-    questionElement.innerHTML = questionNo + ". " + currentQuestion.question;
-
-    currentQuestion.answers.forEach(answer => {
-        const button = document.createElement("button");
-        button.innerHTML = answer.text;
-        button.classList.add("btn");
-        answerButtons.appendChild(button);
-        if(answer.correct){
-            button.dataset.correct = answer.correct;
-        }
-        button.addEventListener("click", selectAnswer);
-    });
-}
-
-
-function resetState(){
-    nextButton.style.display = "none";
-    while(answerButtons.firstChild){
-        answerButtons.removeChild(answerButtons.firstChild);
-    }
-}
-
-function selectAnswer(e){
-    const selectedBtn = e.target;
-    const isCorrect = selectedBtn.dataset.correct === "true";
-    if(isCorrect){
-        selectedBtn.classList.add("correct");
-        score++;
-    }else{
-        selectedBtn.classList.add("incorrect");
-    }
-    Array.from(answerButtons.children).forEach(button => {
-        if(button.dataset.correct === "true"){
-            button.classList.add("correct");
-        }
-        button.disabled = true;
-    });
-    nextButton.style.display = "block";
-}
-
-function showScore(){
-    resetState();
-    questionElement.innerHTML = `You scored ${score} out of ${questions.length}!`;
-
-    const buttonContainer = document.createElement('div');
-    buttonContainer.style.display = 'flex';
-    buttonContainer.style.flexDirection = 'flex';
-    buttonContainer.style.alignItems = 'center';
-    buttonContainer.style.gap = '10px';
-
-    // Clear existing buttons
-    while(answerButtons.firstChild){
-        answerButtons.removeChild(answerButtons.firstChild);
-    }
-
-    // Create Try Again button
-    const tryAgainBtn = document.createElement("button");
-    tryAgainBtn.innerHTML = "Try Again";
-    tryAgainBtn.className = "button";
-    tryAgainBtn.style.display = "block";
-    tryAgainBtn.addEventListener("click", startQuiz);
-
-    // Always show Try Again
-    answerButtons.appendChild(tryAgainBtn);
-
-    // Create Enter Tower button if score >= 4
-    if(score >= 4) {
-        const enterTowerBtn = document.createElement("button");
-        enterTowerBtn.innerHTML = "Enter the Tower";
-        enterTowerBtn.id = "enter-tower-btn";
-        enterTowerBtn.style.display = "block";
-        enterTowerBtn.addEventListener("click", function() {
-            document.querySelector('.app').style.opacity = 0;
-            setTimeout(() => {
-                document.querySelector('.app').style.display = 'none';
-                document.querySelector('.main-image').src = "Inside.png";
-            }, 1000);
-        });
-        
-        answerButtons.insertBefore(enterTowerBtn, tryAgainBtn);
-    }
-}
-
-
-function handleNextButton(){
-    currentQuestionIndex++;
-    if(currentQuestionIndex < questions.length){
+    function startQuiz() {
+        currentQuestionIndex = 0;
+        score = 0;
+        quizElements.nextBtn.text("Next");
         showQuestion();
-    }else{
-        showScore();
     }
-}
 
+    function showQuestion() {
+        resetState();
+        const currentQuestion = questions[currentQuestionIndex];
+        quizElements.question.text(`${currentQuestionIndex + 1}. ${currentQuestion.question}`);
 
-nextButton.addEventListener("click", ()=>{
-    if(currentQuestionIndex < questions.length){
-        handleNextButton();
-    }else{
-        startQuiz();
+        currentQuestion.answers.forEach(answer => {
+            const button = $("<button>")
+                .text(answer.text)
+                .addClass("btn")
+                .appendTo(quizElements.answers)
+                .on("click", selectAnswer);
+
+            if (answer.correct) button.data("correct", answer.correct);
+        });
     }
+
+    function resetState() {
+        quizElements.nextBtn.hide();
+        quizElements.answers.empty();
+    }
+
+    function selectAnswer(e) {
+        const button = $(e.target);
+        const correct = button.data("correct");
+        
+        button.addClass(correct ? "correct" : "incorrect");
+        if (correct) score++;
+        
+        quizElements.answers.find("button").prop("disabled", true);
+        quizElements.nextBtn.show();
+    }
+
+    function showScore() {
+        resetState();
+        quizElements.question.text(`You scored ${score} out of ${questions.length}!`);
+
+        const tryAgainBtn = $("<button>")
+            .text("Try Again")
+            .addClass("button")
+            .on("click", startQuiz);
+
+        if (score >= 4) {
+            $("<button>")
+                .text("Enter the Tower")
+                .addClass("button")
+                .insertBefore(tryAgainBtn)
+                .on("click", () => {
+                    $(".app").animate({ opacity: 0 }, 1000, () => {
+                        $(".app").hide();
+                        $(".main-image").attr("src", "Inside.png");
+                    });
+                });
+        }
+
+        quizElements.answers.append(tryAgainBtn);
+    }
+
+    quizElements.nextBtn.on("click", () => {
+        currentQuestionIndex < questions.length - 1 ? showQuestion() : showScore();
+    });
+
+    // Initialize quiz
+    startQuiz();
 });
-
 </script>
     </body>
 </html>
