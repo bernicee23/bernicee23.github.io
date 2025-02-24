@@ -551,14 +551,19 @@ text-align: center;
   
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+<script>
 $(document).ready(function() {
     // Original image dimensions
     const originalWidth = 1472;
     const originalHeight = 832;
     let crystalsCollected = 0;
 
+    // Initialize elements
+    $('.crystal, #hotspot2').hide();
+    $('#welcomeMessage').css({opacity: 0, display: 'block'});
+
     // Welcome message animation
-    $('#welcomeMessage').css({opacity: 0, display: 'block'}).animate({opacity: 1}, 1000);
+    $('#welcomeMessage').animate({opacity: 1}, 1000);
     $('#welcomeMessage p').each(function(index) {
         $(this).delay(1000 * index).animate({opacity: 1}, 1000);
     });
@@ -572,7 +577,7 @@ $(document).ready(function() {
         if(!$(this).data('collected')) {
             crystalsCollected++;
             $(this).data('collected', true)
-                   .find('.crystal-box').fadeTo(200, 1).delay(2000).fadeTo(500, 0);
+                   .find('.crystal-box').stop(true).fadeTo(200, 1).delay(2000).fadeTo(500, 0);
         }
     });
 
@@ -584,23 +589,26 @@ $(document).ready(function() {
         
         $('area').each(function() {
             const coords = $(this).attr('coords').split(',').map(Number);
-            const scaledCoords = coords.map((coord, index) => 
-                Math.round(coord * (index % 2 === 0 ? 
+            const scaledCoords = coords.map((coord, index) => {
+                const scale = index % 2 === 0 ? 
                     currentWidth/originalWidth : 
-                    currentHeight/originalHeight))
-            );
+                    currentHeight/originalHeight;
+                return Math.round(coord * scale);
+            });
             $(this).attr('coords', scaledCoords.join(','));
         });
     }
 
     // Initialize scaling
-    $('.main-image').on('load', scaleImageMap).trigger('load');
-    $(window).on('resize', scaleImageMap);
+    $('.main-image').on('load', function() {
+        scaleImageMap();
+        $(window).on('resize', scaleImageMap);
+    }).trigger('load');
 
     // Hotspot 1 click handler
-    $('area[alt="Hotspot 1"]').click(function(e) {
+    $(document).on('click', 'area[alt="Hotspot 1"]', function(e) {
         e.preventDefault();
-        $('.main-image').fadeTo(1000, 0, function() {
+        $('.main-image').stop(true).fadeTo(1000, 0, function() {
             $(this).attr('src', 'Path.jpeg').fadeTo(1000, 1, function() {
                 $('.crystal, area[alt="Hotspot 2"]').fadeIn(1000);
                 scaleImageMap();
@@ -609,10 +617,10 @@ $(document).ready(function() {
     });
 
     // Hotspot 2 click handler
-    $('area[alt="Hotspot 2"]').click(function(e) {
+    $(document).on('click', 'area[alt="Hotspot 2"]', function(e) {
         e.preventDefault();
         if(crystalsCollected === 4) {
-            $('.main-image').fadeTo(1000, 0, function() {
+            $('.main-image').stop(true).fadeTo(1000, 0, function() {
                 $(this).attr('src', 'Guard.jpeg').fadeTo(1000, 1, function() {
                     $('.app').fadeIn(1000);
                     scaleImageMap();
