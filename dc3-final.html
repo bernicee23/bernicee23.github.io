@@ -492,7 +492,7 @@ text-align: center;
 
 <script>
 $(document).ready(function() {
-    // ========== IMAGE MAP SYSTEM ==========
+    // ========== Image Map Scaling Fix ==========
     const originalWidth = 1472;
     const originalHeight = 832;
     
@@ -501,6 +501,7 @@ $(document).ready(function() {
         const currentWidth = img.width();
         const currentHeight = img.height();
         
+        // Only adjust if image has valid dimensions
         if (currentWidth > 0 && currentHeight > 0) {
             const scaleX = currentWidth / originalWidth;
             const scaleY = currentHeight / originalHeight;
@@ -519,20 +520,13 @@ $(document).ready(function() {
     $('.main-image').on('load', function() {
         adjustMap();
         $(window).on('resize', adjustMap);
-    }).trigger('load');
+    }).trigger('load'); // Force trigger if already loaded
 
-    // ========== CRYSTAL VISIBILITY FIX ==========
-    // Add initial hidden state for crystals
-    $('.crystal').css({
-        'opacity': '0',
-        'transition': 'opacity 0.5s',
-        'pointer-events': 'none'
-    });
-
-    // ========== HOTSPOT FIXES ==========
-    $('area').attr('href', 'javascript:void(0);');
-
-    // ========== WELCOME SEQUENCE ==========
+    // ========== Hotspot Fixes ==========
+    $('area').attr('href', 'javascript:void(0);'); // Ensure clickable behavior
+    
+    // ========== Rest of Your Script ==========
+    // Welcome Sequence
     const lines = $(".welcome-box p");
     const button = $("#startBtn");
     const delay = 1000;
@@ -549,19 +543,13 @@ $(document).ready(function() {
         });
     });
 
-    // ========== CRYSTAL INTERACTIONS FIX ==========
+    // Crystal Interactions
     const crystalConfig = {
-        "grey-crystal": { 
-            target: "#grey-box",
-            content: "Basic AI Knowledge Content"
-        },
-        "pink-crystal": { 
-            target: "#pink-box",
-            content: "AI Applications Content" 
-        },
+        "grey-crystal": { target: "#grey-box" },
+        "pink-crystal": { target: "#pink-box" },
         "red-crystal": {
             target: "#red-box",
-            content: "<div class='crystal-text'>Disadvantages of AI...</div>",
+            content: "<div class='crystal-text'>Disadvantages of AI<br>AI may produce inaccurate or misleading info while sounding highly convincing.<br>AI generated content may include copyrighted or deepfake content, leading to legal and ethical concerns</div>",
             style: {
                 backgroundColor: "rgba(255, 0, 0, 0.8)",
                 boxShadow: "0 0 10px rgba(255, 0, 0, 0.8)"
@@ -569,7 +557,7 @@ $(document).ready(function() {
         },
         "blue-crystal": {
             target: "#blue-box",
-            content: "<div class='crystal-text'>AI Best Practices...</div>",
+            content: "<div class='crystal-text'>When using Gen AI, <br>Always flag or tag AI-generated content to prevent misinformation <br>Verify sources when using info produced by gen ai</div>",
             style: {
                 backgroundColor: "rgba(0, 0, 255, 0.8)",
                 boxShadow: "0 0 10px rgba(0, 0, 255, 0.8)"
@@ -580,14 +568,13 @@ $(document).ready(function() {
     Object.entries(crystalConfig).forEach(([id, config]) => {
         $(`#${id}`).on("click", function() {
             const target = $(config.target);
-            target.html(config.content)
-                 .css(config.style || {})
-                 .css('opacity', '1')
-                 .siblings('.info-box').css('opacity', '0');
+            if (config.content) target.html(config.content);
+            if (config.style) target.css(config.style);
+            target.css("opacity", "1");
         });
     });
 
-    // ========== HOTSPOT INTERACTIONS ==========
+    // Hotspot Interactions
     let newBox = null;
     const crystalsCollected = {
         grey: false,
@@ -598,22 +585,39 @@ $(document).ready(function() {
 
     $("#hotspot").on("click", function(e) {
         e.preventDefault();
+        console.log('Hotspot 1 clicked');
         $("#homeImage").addClass("fade-out");
         
         setTimeout(() => {
             $(".main-image")
                 .attr("src", "Path.jpeg")
                 .on("load", function() {
-                    adjustMap();
-                    // Show crystals with animation
-                    $(".crystal").css({
-                        'opacity': '1',
-                        'pointer-events': 'auto'
-                    });
+                    adjustMap(); // Re-adjust map for new image
+                    $(".crystal").addClass("crystal-visible");
                     $("#hotspot2").show();
 
                     if (!newBox) {
-                        newBox = $(`<div id="new-box">...</div>`).appendTo("body");
+                        newBox = $(`<div id="new-box">
+                            <p>Collect the Crystals, they will aid you when you take on the Test.<br>
+                            Click on the Tower when you're done.</p>
+                        </div>`).css({
+                            position: "absolute",
+                            bottom: "20px",
+                            left: "50%",
+                            transform: "translateX(-50%)",
+                            backgroundColor: "rgba(11, 128, 167, 0.9)",
+                            boxShadow: "0 0 15px rgba(255, 0, 0, 0.8)",
+                            padding: "20px",
+                            borderRadius: "10px",
+                            textAlign: "center",
+                            width: "80%",
+                            maxWidth: "500px",
+                            opacity: "0",
+                            transition: "opacity 1s",
+                            zIndex: "2000",
+                            color: "white"
+                        }).appendTo("body");
+
                         setTimeout(() => newBox.css("opacity", "1"), 50);
                     }
                 });
@@ -622,6 +626,7 @@ $(document).ready(function() {
 
     $("#hotspot2").on("click", function(e) {
         e.preventDefault();
+        console.log('Hotspot 2 clicked');
         if (Object.values(crystalsCollected).every(v => v)) {
             $(".crystal, #new-box").animate({ opacity: 0 }, 1000, function() {
                 $(this).remove();
@@ -631,17 +636,99 @@ $(document).ready(function() {
                 $(".main-image")
                     .attr("src", "Guard.jpeg")
                     .on("load", function() {
-                        adjustMap();
-                        $(".app").show().addClass("visible");
-                    });
+                        adjustMap(); // Re-adjust map for new image
+                        $(".app")
+                            .show()
+                            .addClass("visible");
+                    })
+                    .on("error", () => console.error("Failed to load Guard.jpeg"));
             }, 1100);
         } else {
             alert("Learn from the Crystals before proceeding.");
         }
     });
 
-    // ========== QUIZ SYSTEM ==========
-    // ... (keep your existing quiz code unchanged) ...
+    // Quiz System
+    const questions = [ /* Your questions array */ ];
+    const quizElements = {
+        question: $("#question"),
+        answers: $("#answer-buttons"),
+        nextBtn: $("#next-btn")
+    };
+    
+    let currentQuestionIndex = 0;
+    let score = 0;
+
+    function startQuiz() {
+        currentQuestionIndex = 0;
+        score = 0;
+        quizElements.nextBtn.text("Next");
+        showQuestion();
+    }
+
+    function showQuestion() {
+        resetState();
+        const currentQuestion = questions[currentQuestionIndex];
+        quizElements.question.text(`${currentQuestionIndex + 1}. ${currentQuestion.question}`);
+
+        currentQuestion.answers.forEach(answer => {
+            const button = $("<button>")
+                .text(answer.text)
+                .addClass("btn")
+                .appendTo(quizElements.answers)
+                .on("click", selectAnswer);
+
+            if (answer.correct) button.data("correct", answer.correct);
+        });
+    }
+
+    function resetState() {
+        quizElements.nextBtn.hide();
+        quizElements.answers.empty();
+    }
+
+    function selectAnswer(e) {
+        const button = $(e.target);
+        const correct = button.data("correct");
+        
+        button.addClass(correct ? "correct" : "incorrect");
+        if (correct) score++;
+        
+        quizElements.answers.find("button").prop("disabled", true);
+        quizElements.nextBtn.show();
+    }
+
+    function showScore() {
+        resetState();
+        quizElements.question.text(`You scored ${score} out of ${questions.length}!`);
+
+        const tryAgainBtn = $("<button>")
+            .text("Try Again")
+            .addClass("button")
+            .on("click", startQuiz);
+
+        if (score >= 4) {
+            $("<button>")
+                .text("Enter the Tower")
+                .addClass("button")
+                .insertBefore(tryAgainBtn)
+                .on("click", () => {
+                    $(".app").animate({ opacity: 0 }, 1000, () => {
+                        $(".app").hide();
+                        $(".main-image").attr("src", "Inside.png");
+                    });
+                });
+        }
+
+        quizElements.answers.append(tryAgainBtn);
+    }
+
+    quizElements.nextBtn.on("click", () => {
+        currentQuestionIndex < questions.length - 1 ? showQuestion() : showScore();
+    });
+
+    // Initialize quiz
+    startQuiz();
 });
 </script>
     </body>
