@@ -17,7 +17,7 @@
   margin: 0;
   font-family: 'Outfit', sans-serif;
   background-color: white;
-  overflow: hidden;
+  overflow: visible; /*temp debug */
   }
 
   .main-image {
@@ -94,6 +94,7 @@
             position: absolute;
             opacity: 0;
             transition: opacity 0.5s ease;
+            z-index: 2000;
         }
 
         .crystal-visible {
@@ -494,15 +495,6 @@ text-align: center;
         <p>You are now well-equipped to be a user of Gen AI.</p>
     </div>
   
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <!-- ... (keep head section exactly as is) ... -->
-</head>
-<body>
-    <!-- ... (keep body content exactly as is) ... -->
-
 <script>
 $(document).ready(function() {
     // ========== Image Map Scaling ==========
@@ -511,12 +503,16 @@ $(document).ready(function() {
     
     function adjustMap() {
         const img = $('.main-image');
-        const currentWidth = img.width();
-        const currentHeight = img.height();
+        if (!img) return;
+
+        const naturalWidth = img.naturalWidth;
+        const naturalHeight = img.naturalHeight;
+        const currentWidth = img.width;
+        const currentHeight = img.height;
         
         if (currentWidth > 0 && currentHeight > 0) {
-            const scaleX = currentWidth / originalWidth;
-            const scaleY = currentHeight / originalHeight;
+            const scaleX = currentWidth / naturalWidth;
+            const scaleY = currentHeight / naturalHeight;
 
             $('area').each(function() {
                 const coords = $(this).attr('coords').split(',').map(Number);
