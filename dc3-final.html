@@ -24,6 +24,7 @@
   width: 100%;
   height: auto;
   position: relative;
+    z-index: 1000
   }
 
   .welcome-box {
@@ -44,7 +45,7 @@
   display: flex;
   flex-direction: column;
   justify-content: stretch; /* Ensure button has space */
-  z-index: 1;
+  z-index: 2000;
   }
 
   #homeImage {
@@ -413,6 +414,14 @@ text-align: center;
     <audio id="background-audio" src="futuristic-sci-fi-cinematic-112293.mp3" autoplay loop></audio>
 
 
+    <div class="welcome-box" id="welcomeMessage">
+        <p>Welcome, traveller.</p>
+        <p>This is the land of AI.</p>
+        <p>Before you join us in the Tower of Knowledge, you must pass the guard's Test.</p>
+        <p>Go through the door when you're ready.</p>
+        <button id="startBtn" class="button" style="display: none;">Let's Go</button>
+    </div>
+  
     <img src="https://bernicee23.github.io/Home.jpeg" class="main-image" alt="Background Image" usemap="#image-map">
     <img id="homeImage" src="Home.jpeg" alt="Home Image" style="display:none;">
     <div class="crystal" id="crystal1">Crystal 1</div>
@@ -423,14 +432,6 @@ text-align: center;
         <area shape="rect" coords="698,4,878,4823" alt="Hotspot 2" id="hotspot2" href="javascript:void(0);">
     </map>
     
-
-    <div class="welcome-box" id="welcomeMessage">
-        <p>Welcome, traveller.</p>
-        <p>This is the land of AI.</p>
-        <p>Before you join us in the Tower of Knowledge, you must pass the guard's Test.</p>
-        <p>Go through the door when you're ready.</p>
-        <button id="startBtn" class="button" style="display: none;">Let's Go</button>
-    </div>
 
     <div class="crystal" id="grey-crystal">
         <img src="Grey Crystal.png" alt="Grey Crystal">
@@ -520,11 +521,11 @@ text-align: center;
         $(window).on('resize', adjustMap);
 
       $('#hotspot, #hotspot2').on('click', function(event) {
-7        event.preventDefault(); // Stop the browser from navigating
-8        // Your code to change the image goes here
-9        // Example:
-10        $('.main-image').attr('src', 'new-image.jpg');
-11    });
+       event.preventDefault(); // Stop the browser from navigating
+        // Your code to change the image goes here
+        // Example:
+        $('.main-image').attr('src', 'new-image.jpg');
+    });
     });
           
     document.addEventListener("DOMContentLoaded", function() {
