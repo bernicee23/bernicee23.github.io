@@ -8,6 +8,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap" rel="stylesheet">
   <base href="https://bernicee23.github.io/">
 
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 
 <style>
 
@@ -21,7 +23,6 @@
   .main-image {
   width: 100%;
   height: auto;
-  margin-top: px;
   position: relative;
   }
 
@@ -413,7 +414,7 @@ text-align: center;
 
 
     <img src="https://bernicee23.github.io/Home.jpeg" class="main-image" alt="Background Image" usemap="#image-map">
-    <img id="homeImage" src="Home.jpeg" alt="Home Image">
+    <img id="homeImage" src="Home.jpeg" alt="Home Image" style="display:none;">
     <div class="crystal" id="crystal1">Crystal 1</div>
     <div class="crystal" id="crystal2">Crystal 2</div>
 
@@ -487,7 +488,38 @@ text-align: center;
         <p>You are now well-equipped to be a user of Gen AI.</p>
     </div>
   
-        <script>
+
+          <script>
+    $(document).ready(function() {
+        // Original dimensions of the image
+        const originalWidth = 1472; // Replace with the actual original width
+        const originalHeight = 832;  // Replace with the actual original height
+
+        // Function to adjust the coordinates
+        function adjustMap() {
+            const img = $('.main-image');
+            const currentWidth = img.width();
+            const currentHeight = img.height();
+
+            // Calculate scaling factors
+            const scaleX = currentWidth / originalWidth;
+            const scaleY = currentHeight / originalHeight;
+
+            // Adjust the coordinates of each area
+            $('area').each(function() {
+                const coords = $(this).attr('coords').split(',').map(Number);
+                const newCoords = coords.map((coord, index) => {
+                    return index % 2 === 0 ? Math.round(coord * scaleX) : Math.round(coord * scaleY);
+                });
+                $(this).attr('coords', newCoords.join(','));
+            });
+        }
+
+        // Adjust the map on load and resize
+        adjustMap();
+        $(window).on('resize', adjustMap);
+    });
+          
     document.addEventListener("DOMContentLoaded", function() {
     let lines = document.querySelectorAll(".welcome-box p");
     let button = document.getElementById("startBtn");
