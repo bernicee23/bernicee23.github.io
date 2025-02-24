@@ -39,13 +39,14 @@
   box-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
   opacity: 0;
   animation: fadeIn 3s forwards;
+  animation-delay: 0.5s;
   width: 80%;
   max-width: 500px;
   height: 250px;
   display: flex;
   flex-direction: column;
   justify-content: stretch; /* Ensure button has space */
-  z-index: 2000;
+  z-index: 9999;
   }
 
   #homeImage {
@@ -84,6 +85,8 @@
     transition: all 0.3s ease;
     z-index: 1000;
     margin-top: 15px; /* Added more space from the text above */
+    display: block !important;
+    opacity: 1 !important;
 }
         .button:hover {
             box-shadow: 0 0 10px rgba(11, 128, 167, 0.9);
@@ -531,6 +534,9 @@ $(document).ready(function() {
     $('area').attr('href', 'javascript:void(0);');
 
     // ========== Welcome Sequence ==========
+  setTimeout(() => {
+    $("#welcomeMessage").css("animation", "fadeIn 3s forwards");
+    
     const lines = $(".welcome-box p");
     const button = $("#startBtn");
     const delay = 1000;
@@ -540,6 +546,7 @@ $(document).ready(function() {
     });
 
     setTimeout(() => button.show(), delay * lines.length);
+  },500);
 
     button.on("click", function() {
         $("#welcomeMessage").animate({ opacity: 0 }, 1000, () => {
