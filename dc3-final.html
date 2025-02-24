@@ -36,7 +36,8 @@
   display: flex;
   flex-direction: column;
   justify-content: stretch; /* Ensure button has space */
-  z-index: 9999;
+  z-index: 9999 !important;
+    opacity: 0;
   }
 
   .main-image {
@@ -82,7 +83,7 @@
     transition: all 0.3s ease;
     z-index: 1000;
     margin-top: 15px; /* Added more space from the text above */
-    display: inline-block;
+    display: none;
     opacity: 0;
     transition: opacity 0.5s ease;
 }
@@ -92,6 +93,7 @@
         }
 
         .button.visible {
+            display: inline-block;
             opacity: 1;
   }
 
@@ -553,8 +555,7 @@ $("#welcomeMessage")
         });
 
         setTimeout(() => {
-            button.css({ opacity: 0 })
-              .show ()
+            button.css({ opacity: 0, display: 'block' })
               .animate({ opacity: 1 }, 1000, function() {
                 $(this).addClass('visible')
                 {);
